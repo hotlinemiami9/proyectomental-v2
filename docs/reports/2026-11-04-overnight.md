@@ -72,6 +72,34 @@ Pendiente y bloqueante para afirmar paridad:
 - No se ha desplegado producción.
 - La auditoría mantiene dos avisos moderados y dos bajos en dependencias de build; no hay avisos altos. Están documentados en `docs/security/dependencies.md`.
 
-## Estado de Git
+## Estado final
 
-El trabajo está en la rama `feat/local-mvp`. El informe se actualizará con el número de PR y el resultado de CI al subirlo.
+- PR #5 fusionado en `main` con squash.
+- Commit final: `87283d8`.
+- CI verde: calidad, tests, build, Docker y mensajes de commit.
+- Staging desplegado desde `main` y validado:
+  - `https://dev.proyectomental.com`
+  - HTTP 200.
+  - `/api/health` correcto.
+  - Cálculo real de una carta de prueba correcto.
+- Producción **no actualizada**:
+  - `https://proyectomental.com` sigue sirviendo la base técnica anterior.
+  - El auto-deploy de producción quedó desactivado antes de empezar.
+- No se conectó Supabase ni ningún servicio externo.
+- No se aplicaron migraciones.
+- No se leyó ni expuso ningún secreto.
+
+## Cómo revisar staging
+
+1. Abrir `https://dev.proyectomental.com`.
+2. Introducir datos de prueba.
+3. Buscar una ciudad, confirmar y calcular.
+4. Abrir la carta, probar PNG/PDF y la biblioteca local.
+
+## Qué falta para producción
+
+- Decidir si se actualiza producción manualmente o se reactiva el auto-deploy.
+- Validar Jovian con referencias legales.
+- Reparar y conectar Supabase.
+- Revisar el contenido editorial.
+- Añadir guías, legal y servicios de observabilidad.
