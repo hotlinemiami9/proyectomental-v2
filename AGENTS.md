@@ -10,7 +10,7 @@ Lee antes de cambiar código:
 4. `docs/security/threat-model.md`
 5. El runbook correspondiente en `docs/runbooks/`.
 
-Este repositorio está en fase de entorno. No implementes funcionalidades de producto sin una petición explícita.
+El repositorio contiene un MVP local funcional. No conectes Supabase, servicios externos, cuentas ni producción sin autorización explícita. La validación completa contra Jovian sigue pendiente.
 
 ## Stack
 
