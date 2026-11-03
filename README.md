@@ -6,7 +6,17 @@ La aplicación permitirá introducir datos de nacimiento, calcular una carta de 
 
 ## Estado
 
-El repositorio contiene por ahora la **base técnica y el entorno de desarrollo**. Todavía no implementa el formulario, el cálculo, la carta, las cuentas ni el contenido editorial.
+El repositorio contiene un **MVP local funcional**:
+
+- Formulario de nacimiento en tres pasos.
+- Búsqueda offline de ciudades y resolución de zona horaria histórica.
+- Cálculo aislado de la carta con `free-human-design`.
+- BodyGraph visual, resumen, centros, canales, puertas e interpretaciones esenciales.
+- Horas aproximadas con detección de campos inestables.
+- Biblioteca local de cartas, renombrado, duplicado y eliminación.
+- Exportación PNG y PDF desde el navegador.
+
+Las cuentas, la sincronización con Supabase, la analítica, el correo y los backups están preparados en documentación y migraciones, pero **no conectados**. La validación completa contra Jovian sigue pendiente.
 
 ## Requisitos
 
@@ -48,6 +58,7 @@ pnpm check:env      # comprobar variables requeridas en producción
 - [Backups](docs/runbooks/backups.md)
 - [Observabilidad](docs/runbooks/observability.md)
 - [Pendientes legales](docs/legal/pending.md)
+- [Informe de la noche del 4 de noviembre](docs/reports/2026-11-04-overnight.md)
 
 ## Entornos
 

@@ -81,13 +81,20 @@ Birth data is personal data. Do not store it in analytics, error payloads, logs,
 - Exports are generated server-side or in a controlled client flow without leaking other users' data.
 - The Coolify MCP token is scoped to the team and used only for infrastructure operations.
 
+## Current implementation
+
+- Nuxt application, Dockerfile, healthcheck and CI are in place.
+- The local MVP implements the form, city lookup, chart engine wrapper, BodyGraph, local library and PNG/PDF export.
+- The calculation engine is isolated in `server/utils/chart-engine.ts`.
+- Supabase migrations and RLS policies are prepared in `supabase/`, but not applied.
+- Accounts remain behind `NUXT_PUBLIC_ACCOUNTS_ENABLED=false`.
+
 ## Pending technical work
 
-- Add Dockerfile, healthcheck, CI, tests, and environment validation (this setup).
-- Create Supabase dev/prod projects and schemas.
-- Implement and validate the calculation engine.
-- Build the account and chart data model with RLS.
-- Add PDF/PNG export.
+- Validate the calculation against a legal Jovian reference set.
+- Repair the staging Supabase instance and create the minimal production instance.
+- Apply migrations and test RLS with two users.
+- Connect optional accounts and synchronization behind the feature flag.
 - Add Umami and GlitchTip services.
 - Add Cloudflare R2 backup workflow and restore drill.
 - Add Capacitor shell after web MVP.

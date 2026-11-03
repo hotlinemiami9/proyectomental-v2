@@ -40,6 +40,7 @@ export default defineNuxtConfig({
       appVersion: '0.1.0',
       supabaseUrl: '',
       supabaseAnonKey: '',
+      accountsEnabled: false,
       glitchtipDsn: '',
       umamiScriptUrl: '',
       umamiWebsiteId: '',

@@ -1,59 +1,107 @@
 <script setup lang="ts">
+import { typeLabels } from '~/data/chart-labels'
+import { typeContent } from '~/data/interpretations'
+
 const { t } = useI18n()
 
 useSeoMeta({
-  title: formatPageTitle(t('home.title')),
-  description: t('home.description'),
+  title: formatPageTitle('Tu carta de Diseño Humano'),
+  description:
+    'Calcula tu carta de Diseño Humano con tus datos de nacimiento. Sin registro obligatorio y con una lectura clara para empezar.',
 })
+
+const types = Object.entries(typeContent)
 </script>
 
 <template>
-  <main id="main" class="relative flex min-h-svh items-center overflow-hidden px-6 py-16 sm:px-10">
-    <div class="pointer-events-none absolute inset-0" aria-hidden="true">
-      <div
-        class="absolute top-0 left-1/2 size-[34rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-aurora-500/15 blur-3xl"
-      />
-      <div
-        class="absolute right-0 bottom-0 size-80 translate-x-1/3 translate-y-1/3 rounded-full bg-gold-300/10 blur-3xl"
-      />
-    </div>
+  <div class="relative overflow-hidden">
+    <div
+      class="pointer-events-none absolute inset-x-0 top-0 h-[42rem] bg-[radial-gradient(ellipse_at_top,rgba(139,92,246,0.18),transparent_65%)]"
+    />
+    <div class="relative mx-auto w-full max-w-6xl px-5 pb-20 sm:px-8">
+      <SiteHeader />
 
-    <section class="relative mx-auto w-full max-w-4xl">
-      <p class="text-xs font-medium tracking-[0.32em] text-gold-300 uppercase">
-        {{ t('home.eyebrow') }}
-      </p>
-      <h1
-        class="mt-5 max-w-3xl font-serif text-5xl leading-[1.02] tracking-tight text-balance sm:text-7xl"
+      <section
+        class="grid items-start gap-10 pt-8 lg:grid-cols-[minmax(0,1fr)_minmax(22rem,29rem)] lg:gap-14 lg:pt-16"
       >
-        {{ t('home.title') }}
-      </h1>
-      <p class="mt-6 max-w-xl text-base leading-relaxed text-moon-300 sm:text-lg">
-        {{ t('home.description') }}
-      </p>
+        <div class="lg:sticky lg:top-8">
+          <p class="text-[11px] tracking-[0.32em] text-gold-300 uppercase">
+            {{ t('home.eyebrow') }}
+          </p>
+          <h1
+            class="mt-5 max-w-[12ch] font-serif text-[clamp(3rem,8vw,6.5rem)] leading-[0.88] font-medium tracking-[-0.04em] text-balance"
+          >
+            Tu carta,
+            <span class="text-moon-500 italic">sin ruido.</span>
+          </h1>
+          <p class="mt-7 max-w-md text-base leading-relaxed text-moon-300 sm:text-lg">
+            Tres datos del instante en que naciste. Una forma más clara de empezar a explorar tu
+            Diseño Humano.
+          </p>
+          <div class="mt-8 flex flex-wrap gap-2 text-xs text-moon-300">
+            <span class="rounded-full border border-white/10 px-3 py-1.5"
+              >Sin registro obligatorio</span
+            >
+            <span class="rounded-full border border-white/10 px-3 py-1.5"
+              >Datos guardados en tu dispositivo</span
+            >
+            <span class="rounded-full border border-white/10 px-3 py-1.5">Español</span>
+          </div>
+        </div>
 
-      <div class="mt-10 flex flex-wrap items-center gap-3">
-        <UButton to="/api/health" target="_blank" icon="i-lucide-activity" size="lg">
-          {{ t('home.health') }}
-        </UButton>
-        <UBadge color="neutral" variant="outline" size="lg">
-          {{ t('home.version', { version: useRuntimeConfig().public.appVersion }) }}
-        </UBadge>
-      </div>
+        <BirthForm />
+      </section>
 
-      <dl class="mt-16 grid gap-6 border-t border-white/10 pt-8 text-sm sm:grid-cols-3">
+      <section id="explora" class="mt-28 border-t border-white/10 pt-12">
+        <div class="max-w-2xl">
+          <p class="text-[11px] tracking-[0.24em] text-gold-300 uppercase">Después de la carta</p>
+          <h2 class="mt-3 font-serif text-4xl leading-tight sm:text-5xl">
+            Una lectura para volver a ti.
+          </h2>
+          <p class="mt-4 text-sm leading-relaxed text-moon-300 sm:text-base">
+            La carta no es una etiqueta. Es un mapa para observar cómo respondes, cómo decides y qué
+            energía te sostiene.
+          </p>
+        </div>
+
+        <div class="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-5">
+          <article
+            v-for="([key, content], index) in types"
+            :key="key"
+            class="group rounded-2xl border border-white/10 bg-white/[0.03] p-5 transition-colors hover:border-gold-300/40"
+          >
+            <span class="text-[11px] tracking-[0.2em] text-moon-500 uppercase"
+              >0{{ index + 1 }}</span
+            >
+            <h3 class="mt-4 font-serif text-2xl">{{ typeLabels[key] ?? key }}</h3>
+            <p class="mt-3 text-sm leading-relaxed text-moon-300">{{ content.title }}</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="mt-24 grid gap-6 border-t border-white/10 pt-12 md:grid-cols-3">
         <div>
-          <dt class="text-moon-500">{{ t('home.stack.runtime') }}</dt>
-          <dd class="mt-1 text-moon-100">Nuxt 4 · Vue 3 · TypeScript</dd>
+          <p class="text-[11px] tracking-[0.2em] text-gold-300 uppercase">01</p>
+          <h3 class="mt-3 font-serif text-2xl">Tus datos</h3>
+          <p class="mt-2 text-sm leading-relaxed text-moon-300">
+            Nombre, fecha, hora y lugar de nacimiento.
+          </p>
         </div>
         <div>
-          <dt class="text-moon-500">{{ t('home.stack.ui') }}</dt>
-          <dd class="mt-1 text-moon-100">Nuxt UI · Tailwind CSS</dd>
+          <p class="text-[11px] tracking-[0.2em] text-gold-300 uppercase">02</p>
+          <h3 class="mt-3 font-serif text-2xl">Tu carta</h3>
+          <p class="mt-2 text-sm leading-relaxed text-moon-300">
+            Centros, canales, puertas y una lectura esencial.
+          </p>
         </div>
         <div>
-          <dt class="text-moon-500">{{ t('home.stack.quality') }}</dt>
-          <dd class="mt-1 text-moon-100">ESLint · Vitest · Playwright</dd>
+          <p class="text-[11px] tracking-[0.2em] text-gold-300 uppercase">03</p>
+          <h3 class="mt-3 font-serif text-2xl">Tu tiempo</h3>
+          <p class="mt-2 text-sm leading-relaxed text-moon-300">
+            Guarda, compara y vuelve cuando lo necesites.
+          </p>
         </div>
-      </dl>
-    </section>
-  </main>
+      </section>
+    </div>
+  </div>
 </template>

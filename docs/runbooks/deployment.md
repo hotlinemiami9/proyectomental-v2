@@ -13,7 +13,7 @@
 - Container port: `3000`
 - Health path: `/api/health`
 - GitHub App: `hotline-github-app`
-- Production: auto-deploy from `main`, memory limit `768m`
+- Production: auto-deploy disabled during development, memory limit `768m`
 - Staging: manual base deployment, PR previews enabled, memory limit `512m`, `noindex` on `dev.proyectomental.com`
 
 The old `proyectomental-dev` application was deleted. Do not delete the `Apps` project because it contains OpenCode Manager.
