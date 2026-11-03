@@ -1,0 +1,10 @@
+.nuxt
+.output
+node_modules
+pnpm-lock.yaml
+coverage
+playwright-report
+test-results
+content
+.agents
+skills-lock.json

@@ -1,0 +1,14 @@
+{
+  "home": {
+    "eyebrow": "ProyectoMental · V2",
+    "title": "El entorno está preparado",
+    "description": "Base técnica de la nueva versión, lista para construir el cálculo, la carta y la experiencia editorial.",
+    "health": "Comprobar salud del servicio",
+    "version": "Versión {version}",
+    "stack": {
+      "runtime": "Aplicación",
+      "ui": "Interfaz",
+      "quality": "Calidad"
+    }
+  }
+}

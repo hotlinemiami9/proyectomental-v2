@@ -1,0 +1,56 @@
+@import '@fontsource-variable/fraunces';
+@import '@fontsource-variable/manrope';
+@import 'tailwindcss';
+@import '@nuxt/ui';
+
+@theme {
+  --font-sans: 'Manrope Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-serif: 'Fraunces Variable', Georgia, Cambria, 'Times New Roman', serif;
+
+  --color-night-950: #070913;
+  --color-night-900: #0d1020;
+  --color-night-800: #161a30;
+  --color-moon-100: #f7f2e8;
+  --color-moon-300: #d9d0c1;
+  --color-moon-500: #9d9385;
+  --color-aurora-300: #c4b5fd;
+  --color-aurora-500: #8b5cf6;
+  --color-gold-300: #f2d48f;
+}
+
+:root {
+  color-scheme: dark;
+  font-family: var(--font-sans);
+  background: var(--color-night-950);
+}
+
+html {
+  min-width: 320px;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  margin: 0;
+  min-height: 100svh;
+  background:
+    radial-gradient(circle at 50% -20%, rgb(139 92 246 / 16%), transparent 42rem),
+    var(--color-night-950);
+  color: var(--color-moon-100);
+}
+
+::selection {
+  color: var(--color-night-950);
+  background: var(--color-gold-300);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

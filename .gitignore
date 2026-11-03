@@ -1,0 +1,32 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Nuxt build output
+.nuxt/
+.output/
+.data/
+dist/
+
+# Test and coverage output
+coverage/
+playwright-report/
+test-results/
+blob-report/
+*.lcov
+
+# Logs
+*.log
+pnpm-debug.log*
+
+# Local environment files
+.env
+.env.*
+!.env.example
+
+# Local tooling
+.DS_Store
+*.local
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json

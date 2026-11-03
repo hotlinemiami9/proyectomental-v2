@@ -1,0 +1,22 @@
+name: Feature request
+description: Propose a product or engineering change
+title: 'feat: '
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or opportunity
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed outcome
+    validations:
+      required: true
+  - type: textarea
+    id: privacy
+    attributes:
+      label: Privacy, security, and accessibility impact
+      description: Explain any new personal data, external service, cost, or accessibility risk.
