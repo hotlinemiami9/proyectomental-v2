@@ -104,8 +104,9 @@ export interface ChannelPath {
  * - `'minimal'`    — outlines only, no center fills, thin grey channels
  * - `'dark'`       — dark background, bright center fills
  * - `'light'`      — white background, muted fills, subtle channels
+ * - `'proyectomental'` — muted violet, gold and moon palette
  */
-export type ThemePreset = 'default' | 'canonical' | 'minimal' | 'dark' | 'light'
+export type ThemePreset = 'default' | 'canonical' | 'minimal' | 'dark' | 'light' | 'proyectomental'
 
 /**
  * Full customization options for `renderToSVG`.

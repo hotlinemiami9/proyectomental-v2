@@ -116,6 +116,27 @@ const CHANNEL_CIRCUIT: Record<string, string> = {
   '30-41': 'collectiveSensing',
 }
 
+// ─── PROYECTOMENTAL THEME — muted violet, gold and moon palette ─────────────────
+const PROYECTOMENTAL_CENTER_COLORS: Record<CenterName, string> = {
+  Head: '#7b6bd1',
+  Ajna: '#6d5fc2',
+  Throat: '#5c51ae',
+  G: '#8c6fd3',
+  Ego: '#a678c9',
+  Sacral: '#7559c2',
+  SolarPlexus: '#8968c8',
+  Spleen: '#5f5aaf',
+  Root: '#4c468e',
+}
+
+const PROYECTOMENTAL_CIRCUIT_COLORS: Record<string, string> = {
+  integration: '#f2d48f',
+  individual: '#b69cff',
+  tribal: '#e7c4b3',
+  collectiveLogic: '#77b9d6',
+  collectiveSensing: '#b6a7e8',
+}
+
 // ─── THEME DEFINITIONS ─────────────────────────────────────────────────────────
 
 interface ResolvedTheme {
@@ -199,6 +220,34 @@ function buildTheme(preset: ThemePreset, opts: BodyGraphOptions): ResolvedTheme 
         )
       },
       channelWidth: 4,
+    }
+  } else if (preset === 'proyectomental') {
+    base = {
+      ...base,
+      background: '#0b0d18',
+      definedCenter: '#6d5fc2',
+      centerColors: { ...PROYECTOMENTAL_CENTER_COLORS },
+      undefinedCenterStroke: 'rgba(225, 217, 255, 0.35)',
+      centerStroke: '#e6dfff',
+      centerStrokeWidth: 2,
+      designFill: '#b69cff',
+      personalityFill: '#f2d48f',
+      bothFill: '#f7f2e8',
+      inactiveFill: '#151a2d',
+      inactiveText: '#8e87a4',
+      pillStroke: '#0b0d18',
+      channelColor: (k) => {
+        const circuit = CHANNEL_CIRCUIT[k]
+        return (circuit ? PROYECTOMENTAL_CIRCUIT_COLORS[circuit] : undefined) ?? '#c4b5fd'
+      },
+      channelWidth: 3.5,
+      potentialChannelStroke: 'rgba(242, 212, 143, 0.18)',
+      potentialChannelWidth: 1.4,
+      potentialChannelDash: '4,6',
+      spineStroke: '#2e2550',
+      spineOpacity: '0.45',
+      designText: '#b69cff',
+      personalityText: '#f2d48f',
     }
   } else if (preset === 'minimal') {
     base = {
@@ -445,39 +494,37 @@ function renderCenter(shape: CenterShape, defined: boolean, theme: ResolvedTheme
 
 function centerLabel(shape: CenterShape, theme: ResolvedTheme): string {
   const { cx, cy, w, h } = shape
-  const stroke = theme.centerStroke
-  const font = `font-family="Arial,sans-serif" font-weight="bold" fill="${stroke}" opacity="0.85"`
+  const font = `font-family="Arial,sans-serif" font-weight="bold" fill="${theme.centerStroke}" stroke="${theme.background}" stroke-width="2.5" paint-order="stroke" opacity="0.92"`
 
   switch (shape.name) {
     case 'Head': {
-      const labelY = cy + Math.round(h * 0.1)
-      return `<text x="${cx}" y="${labelY}" text-anchor="middle" dominant-baseline="middle" ${font} font-size="10">CABEZA</text>`
+      return `<text x="${cx}" y="${cy + Math.round(h * 0.16)}" text-anchor="middle" dominant-baseline="middle" ${font} font-size="9">CABEZA</text>`
     }
     case 'SolarPlexus': {
       const labelX = cx + Math.round(w * 0.05)
-      return `<text text-anchor="middle" ${font} font-size="9"><tspan x="${labelX}" y="${cy - 5}">PLEXO</tspan><tspan x="${labelX}" dy="11">SOLAR</tspan></text>`
+      return `<text text-anchor="middle" ${font} font-size="8"><tspan x="${labelX}" y="${cy - 5}">PLEXO</tspan><tspan x="${labelX}" dy="10">SOLAR</tspan></text>`
     }
     case 'Spleen': {
       const labelX = cx - Math.round(w * 0.05)
-      return `<text x="${labelX}" y="${cy}" text-anchor="middle" dominant-baseline="middle" ${font} font-size="9">BAZO</text>`
+      return `<text x="${labelX}" y="${cy}" text-anchor="middle" dominant-baseline="middle" ${font} font-size="8">BAZO</text>`
     }
     case 'G': {
-      return `<text x="${cx}" y="${cy}" text-anchor="middle" dominant-baseline="middle" ${font} font-size="10">G</text>`
+      return `<text x="${cx}" y="${cy + 12}" text-anchor="middle" dominant-baseline="middle" ${font} font-size="9">G</text>`
     }
     case 'Ego': {
-      return `<text x="${cx}" y="${cy}" text-anchor="middle" dominant-baseline="middle" ${font} font-size="9">CORAZÓN</text>`
+      return `<text x="${cx}" y="${cy + 30}" text-anchor="middle" dominant-baseline="middle" ${font} font-size="8">CORAZÓN</text>`
     }
     case 'Sacral': {
-      return `<text x="${cx}" y="${cy}" text-anchor="middle" dominant-baseline="middle" ${font} font-size="10">SACRO</text>`
+      return `<text x="${cx}" y="${cy + 8}" text-anchor="middle" dominant-baseline="middle" ${font} font-size="8">SACRO</text>`
     }
     case 'Root': {
-      return `<text x="${cx}" y="${cy}" text-anchor="middle" dominant-baseline="middle" ${font} font-size="10">RAÍZ</text>`
+      return `<text x="${cx}" y="${cy + 20}" text-anchor="middle" dominant-baseline="middle" ${font} font-size="8">RAÍZ</text>`
     }
     case 'Throat': {
-      return `<text x="${cx}" y="${cy}" text-anchor="middle" dominant-baseline="middle" ${font} font-size="10">GARGANTA</text>`
+      return `<text x="${cx}" y="${cy + 18}" text-anchor="middle" dominant-baseline="middle" ${font} font-size="8">GARGANTA</text>`
     }
     case 'Ajna': {
-      return `<text x="${cx}" y="${cy}" text-anchor="middle" dominant-baseline="middle" ${font} font-size="10">AJNA</text>`
+      return `<text x="${cx}" y="${cy + 5}" text-anchor="middle" dominant-baseline="middle" ${font} font-size="9">AJNA</text>`
     }
   }
 }
@@ -649,7 +696,7 @@ export function renderToSVG(chartData: ChartData, options: BodyGraphOptions = {}
   // Body silhouette
   if (showBodySilhouette) {
     parts.push(
-      `<path d="M 410,25 C 375,25 335,55 315,95 C 290,145 285,200 265,260 C 240,325 130,375 120,445 C 110,515 145,585 175,630 C 210,670 262,700 300,715 L 410,720 L 520,715 C 558,700 610,670 645,630 C 665,585 710,515 700,445 C 690,375 590,325 555,260 C 535,200 530,145 505,95 C 485,55 445,25 410,25 Z" fill="#f0e0c8" opacity="0.25"/>`,
+      `<path d="M 410,25 C 375,25 335,55 315,95 C 290,145 285,200 265,260 C 240,325 130,375 120,445 C 110,515 145,585 175,630 C 210,670 262,700 300,715 L 410,720 L 520,715 C 558,700 610,670 645,630 C 665,585 710,515 700,445 C 690,375 590,325 555,260 C 535,200 530,145 505,95 C 485,55 445,25 410,25 Z" fill="#c4b5fd" opacity="0.11"/>`,
     )
   }
 

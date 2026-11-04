@@ -70,13 +70,13 @@ const bodygraphSvg = computed(() => {
       },
     },
     {
-      theme: 'dark',
+      theme: 'proyectomental',
       width: 820,
       showGateNumbers: true,
       showCenterLabels: true,
       showActivationColumns: true,
       showBodySilhouette: true,
-      showSpine: true,
+      showSpine: false,
       spineLineCount: 7,
     },
   )
