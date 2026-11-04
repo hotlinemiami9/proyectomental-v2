@@ -11,6 +11,12 @@ Last reviewed: 2026-11-04.
 - **esbuild (low, Windows development server):** the affected path is the Windows development server; production runs Linux containers. Revisit when `@nuxt/fonts` updates its dependency.
 - **deepmerge (low, no patch):** transitive through Nitro's Rollup plugin. No patched version is published; track the upstream advisory.
 
+## BodyGraph rendering
+
+- `app/lib/bodygraph/` contains an adapted copy of the MIT-licensed renderer and geometry from `@gonzih/hd-bodygraph` 1.4.1.
+- It has no runtime dependencies and does not add React to the Vue client bundle.
+- Attribution and the MIT text are in `THIRD_PARTY_NOTICES.md`.
+
 ## Geographic data
 
 - `all-the-cities` 3.1.0 (MIT): 135,233 populated places with population and coordinates. It is derived from [GeoNames](https://www.geonames.org/) data, licensed under CC BY 4.0; keep that attribution if the dataset is redistributed.

@@ -62,6 +62,7 @@ La búsqueda de localidades usa datos derivados de [GeoNames](https://www.geonam
 - [Backups](docs/runbooks/backups.md)
 - [Observabilidad](docs/runbooks/observability.md)
 - [Pendientes legales](docs/legal/pending.md)
+- [Avisos de terceros](THIRD_PARTY_NOTICES.md)
 - [Informe de la noche del 4 de noviembre](docs/reports/2026-11-04-overnight.md)
 
 ## Entornos

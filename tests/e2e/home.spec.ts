@@ -71,6 +71,8 @@ test('calculates, saves and opens a chart', async ({ page }) => {
   await expect(page).toHaveURL(/\/carta\//, { timeout: 15_000 })
   await expect(page.getByRole('heading', { level: 1 })).toContainText('Prueba E2E')
   await expect(page.getByRole('img', { name: /BodyGraph/ })).toBeVisible()
+  await expect(page.locator('[data-center]')).toHaveCount(9)
+  await expect(page.locator('[data-gate]')).toHaveCount(64)
   await expect(page.getByText('Estrategia')).toBeVisible()
 
   const downloadPromise = page.waitForEvent('download')
