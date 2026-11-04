@@ -14,11 +14,12 @@ const types = Object.entries(typeContent)
 </script>
 
 <template>
-  <div class="relative overflow-hidden">
+  <div class="relative isolate overflow-hidden bg-night-950">
+    <StarfieldSky />
     <div
-      class="pointer-events-none absolute inset-x-0 top-0 h-[42rem] bg-[radial-gradient(ellipse_at_top,rgba(139,92,246,0.18),transparent_65%)]"
+      class="pointer-events-none absolute inset-x-0 top-0 h-[42rem] bg-[radial-gradient(ellipse_at_top,rgba(139,92,246,0.1),transparent_65%)]"
     />
-    <div class="relative mx-auto w-full max-w-6xl px-5 pb-20 sm:px-8">
+    <div class="relative z-10 mx-auto w-full max-w-6xl px-5 pb-20 sm:px-8">
       <SiteHeader />
 
       <section

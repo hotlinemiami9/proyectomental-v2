@@ -2,9 +2,21 @@ import { expect, test } from '@playwright/test'
 
 test('renders the application shell', async ({ page }) => {
   await page.goto('/')
+  await page.locator('[data-hydrated="true"]').waitFor()
 
   await expect(page.getByRole('heading', { level: 1 })).toContainText('Tu carta')
   await expect(page.getByLabel('Nombre')).toBeVisible()
+  await expect(page.locator('[data-starfield]')).toBeVisible()
+  await expect(page.locator('[data-starfield]')).toHaveAttribute('data-animated', 'true')
+})
+
+test('keeps the sky static when reduced motion is requested', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  await page.goto('/')
+  await page.locator('[data-hydrated="true"]').waitFor()
+
+  await expect(page.locator('[data-starfield]')).toBeVisible()
+  await expect(page.locator('[data-starfield]')).toHaveAttribute('data-animated', 'false')
 })
 
 test('exposes a healthy service endpoint', async ({ request }) => {
