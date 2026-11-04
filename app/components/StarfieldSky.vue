@@ -58,8 +58,10 @@ function rgba(color: StarColor, alpha: number) {
 }
 
 function createStarSprite(radius: number, color: StarColor, bright: boolean): StarSprite {
-  const glowRadius = Math.max(4, radius * (bright ? 10 : 6))
-  const size = Math.ceil(glowRadius * 2 + (bright ? 20 : 4))
+  const glowRadius = Math.max(bright ? 6 : 2.4, radius * (bright ? 6.4 : 3.1))
+  const spikeLength = bright ? glowRadius * 2.15 : 0
+  const extent = Math.max(glowRadius, spikeLength)
+  const size = Math.ceil(extent * 2 + 4)
   const scale = 2
   const canvas = document.createElement('canvas')
   canvas.width = size * scale
@@ -71,16 +73,18 @@ function createStarSprite(radius: number, color: StarColor, bright: boolean): St
   spriteContext.scale(scale, scale)
   const center = size / 2
 
+  // A very faint halo keeps the star luminous without turning it into a bright disc.
   const halo = spriteContext.createRadialGradient(center, center, 0, center, center, glowRadius)
-  halo.addColorStop(0, rgba(color, 0.5))
-  halo.addColorStop(0.12, rgba(color, 0.24))
-  halo.addColorStop(0.42, rgba(color, 0.055))
+  halo.addColorStop(0, rgba(color, bright ? 0.17 : 0.09))
+  halo.addColorStop(0.16, rgba(color, bright ? 0.075 : 0.035))
+  halo.addColorStop(0.44, rgba(color, bright ? 0.018 : 0.008))
+  halo.addColorStop(0.76, rgba(color, 0.003))
   halo.addColorStop(1, rgba(color, 0))
   spriteContext.fillStyle = halo
   spriteContext.fillRect(center - glowRadius, center - glowRadius, glowRadius * 2, glowRadius * 2)
 
   if (bright) {
-    const spikeLength = glowRadius * 1.45
+    const spikeWidth = 0.8
     const horizontal = spriteContext.createLinearGradient(
       center - spikeLength,
       center,
@@ -88,12 +92,18 @@ function createStarSprite(radius: number, color: StarColor, bright: boolean): St
       center,
     )
     horizontal.addColorStop(0, rgba(color, 0))
-    horizontal.addColorStop(0.42, rgba(color, 0.035))
-    horizontal.addColorStop(0.5, 'rgba(255, 255, 255, 0.5)')
-    horizontal.addColorStop(0.58, rgba(color, 0.035))
+    horizontal.addColorStop(0.34, rgba(color, 0.04))
+    horizontal.addColorStop(0.48, 'rgba(255, 255, 255, 0.62)')
+    horizontal.addColorStop(0.52, 'rgba(255, 255, 255, 0.62)')
+    horizontal.addColorStop(0.66, rgba(color, 0.04))
     horizontal.addColorStop(1, rgba(color, 0))
     spriteContext.fillStyle = horizontal
-    spriteContext.fillRect(center - spikeLength, center - 0.3, spikeLength * 2, 0.6)
+    spriteContext.fillRect(
+      center - spikeLength,
+      center - spikeWidth / 2,
+      spikeLength * 2,
+      spikeWidth,
+    )
 
     const vertical = spriteContext.createLinearGradient(
       center,
@@ -102,19 +112,40 @@ function createStarSprite(radius: number, color: StarColor, bright: boolean): St
       center + spikeLength,
     )
     vertical.addColorStop(0, rgba(color, 0))
-    vertical.addColorStop(0.42, rgba(color, 0.035))
-    vertical.addColorStop(0.5, 'rgba(255, 255, 255, 0.42)')
-    vertical.addColorStop(0.58, rgba(color, 0.035))
+    vertical.addColorStop(0.34, rgba(color, 0.04))
+    vertical.addColorStop(0.48, 'rgba(255, 255, 255, 0.54)')
+    vertical.addColorStop(0.52, 'rgba(255, 255, 255, 0.54)')
+    vertical.addColorStop(0.66, rgba(color, 0.04))
     vertical.addColorStop(1, rgba(color, 0))
     spriteContext.fillStyle = vertical
-    spriteContext.fillRect(center - 0.3, center - spikeLength, 0.6, spikeLength * 2)
+    spriteContext.fillRect(
+      center - spikeWidth / 2,
+      center - spikeLength,
+      spikeWidth,
+      spikeLength * 2,
+    )
+
+    const diagonalLength = spikeLength * 0.55
+    spriteContext.save()
+    spriteContext.translate(center, center)
+    spriteContext.rotate(Math.PI / 4)
+    const diagonal = spriteContext.createLinearGradient(-diagonalLength, 0, diagonalLength, 0)
+    diagonal.addColorStop(0, rgba(color, 0))
+    diagonal.addColorStop(0.42, rgba(color, 0.08))
+    diagonal.addColorStop(0.5, 'rgba(255, 255, 255, 0.28)')
+    diagonal.addColorStop(0.58, rgba(color, 0.08))
+    diagonal.addColorStop(1, rgba(color, 0))
+    spriteContext.fillStyle = diagonal
+    spriteContext.fillRect(-diagonalLength, -0.28, diagonalLength * 2, 0.56)
+    spriteContext.restore()
   }
 
-  const coreRadius = Math.max(0.7, radius * 1.35)
+  // The core is deliberately small: a point of light, not a glowing ball.
+  const coreRadius = Math.max(0.55, radius * 0.72)
   const core = spriteContext.createRadialGradient(center, center, 0, center, center, coreRadius)
   core.addColorStop(0, 'rgba(255, 255, 255, 1)')
-  core.addColorStop(0.28, 'rgba(255, 255, 255, 0.95)')
-  core.addColorStop(0.65, rgba(color, 0.85))
+  core.addColorStop(0.34, 'rgba(255, 255, 255, 0.98)')
+  core.addColorStop(0.7, rgba(color, 0.78))
   core.addColorStop(1, rgba(color, 0))
   spriteContext.fillStyle = core
   spriteContext.fillRect(center - coreRadius, center - coreRadius, coreRadius * 2, coreRadius * 2)
@@ -176,22 +207,24 @@ function buildStaticLayer() {
 function buildStars() {
   const random = createRandom(0x7ac19e42)
   const count = Math.min(340, Math.max(120, Math.floor((width * height) / 8200)))
+  const heroCount = Math.min(5, Math.floor(count / 70))
 
-  stars = Array.from({ length: count }, () => {
-    const brightness = Math.pow(random(), 3.2)
-    const radius = 0.32 + brightness * 1.75
+  stars = Array.from({ length: count }, (_, index) => {
+    const hero = index < heroCount
+    const brightness = hero ? 0.82 + random() * 0.18 : Math.pow(random(), 3)
+    const radius = hero ? 1.55 + random() * 0.65 : 0.3 + brightness * 1.65
     const color = starColors[Math.floor(random() * starColors.length)] ?? starColors[2]!
-    const bright = radius > 1.22 && random() > 0.42
+    const bright = hero || (radius > 1.02 && random() > 0.38)
 
     return {
       x: random() * width,
       y: random() * height,
       sprite: createStarSprite(radius, color, bright),
-      baseAlpha: 0.3 + brightness * 0.68,
-      depth: 0.35 + random() * 0.6,
+      baseAlpha: hero ? 0.96 : 0.34 + brightness * 0.62,
+      depth: hero ? 0.18 + random() * 0.16 : 0.2 + random() * 0.42,
       phase: random() * Math.PI * 2,
-      speed: 0.55 + random() * 1.45,
-      secondarySpeed: 1.1 + random() * 2.2,
+      speed: 0.16 + random() * 0.3,
+      secondarySpeed: 0.1 + random() * 0.24,
     }
   })
 }
