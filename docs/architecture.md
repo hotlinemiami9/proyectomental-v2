@@ -85,6 +85,7 @@ Birth data is personal data. Do not store it in analytics, error payloads, logs,
 
 - Nuxt application, Dockerfile, healthcheck and CI are in place.
 - The local MVP implements a single-step form, offline lookup of 135,233 places, chart engine wrapper, BodyGraph, local library and PNG/PDF export.
+- The landing includes a semi-transparent style preview bar with nocturnal, aurora, editorial and eclipse variants for typography, stars and form presentation.
 - The BodyGraph uses an adapted MIT SVG renderer in `app/lib/bodygraph/` with all 64 gates, 36 channels, nine centers and activation columns.
 - The calculation engine is isolated in `server/utils/chart-engine.ts` and requires an exact birth time.
 - Supabase migrations and RLS policies are prepared in `supabase/`, but not applied.

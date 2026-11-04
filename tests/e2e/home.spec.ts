@@ -23,6 +23,19 @@ test('keeps the sky static when reduced motion is requested', async ({ page }) =
   await expect(page.locator('[data-starfield]')).toHaveAttribute('data-animated', 'false')
 })
 
+test('switches landing styles and collapses the preview bar', async ({ page }) => {
+  await page.goto('/')
+  await page.locator('[data-hydrated="true"]').waitFor()
+
+  await page.getByRole('button', { name: 'Aurora' }).click()
+  await expect(page.locator('[data-landing-style="aurora"]')).toBeVisible()
+  await expect(page.locator('[data-form-variant="glass"]')).toBeVisible()
+  await expect(page.locator('[data-sky="violet"]')).toBeVisible()
+
+  await page.getByRole('button', { name: 'Casi ocultar' }).click()
+  await expect(page.getByRole('button', { name: 'Mostrar selector de estilos' })).toBeVisible()
+})
+
 test('exposes a healthy service endpoint', async ({ request }) => {
   const response = await request.get('/api/health')
 

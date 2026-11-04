@@ -59,7 +59,7 @@ Decisions captured during the initial discovery interview. Change them through a
 ## Brand and design
 
 - Public brand: ProyectoMental; “Diseño Humano” is the service descriptor.
-- One signature nocturnal theme, not multiple visual themes.
+- One signature nocturnal theme; a landing style preview bar can switch sky, typography and form variants for design evaluation.
 - Subtle cinematic motion, with reduced-motion support.
 - Editorial serif for headings and a highly legible sans for body text.
 - Original celestial symbol and wordmark.

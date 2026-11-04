@@ -13,6 +13,7 @@ El repositorio contiene un **MVP local funcional**:
 - Búsqueda offline de más de 135.000 localidades y resolución de zona horaria histórica.
 - Cálculo aislado de la carta con `free-human-design`.
 - BodyGraph visual, resumen, centros, canales, puertas e interpretaciones esenciales.
+- Selector de estilos de landing con cielo, tipografía y formulario intercambiables.
 - Biblioteca local de cartas, renombrado, duplicado y eliminación.
 - Exportación PNG y PDF desde el navegador.
 

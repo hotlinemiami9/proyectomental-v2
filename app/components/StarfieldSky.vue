@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { StarfieldVariant } from '~/data/landing-styles'
+
 type StarColor = readonly [number, number, number]
 
 interface StarSprite {
@@ -17,18 +19,90 @@ interface Star {
   secondarySpeed: number
 }
 
+interface SkyTheme {
+  colors: readonly StarColor[]
+  background: readonly [string, string, string]
+  haze: readonly [string, string, string]
+  dustAlpha: number
+  density: number
+  brightness: number
+  speed: number
+}
+
+const props = defineProps<{ variant?: StarfieldVariant }>()
+
+const SKY_THEMES: Record<StarfieldVariant, SkyTheme> = {
+  midnight: {
+    colors: [
+      [182, 207, 255],
+      [215, 231, 255],
+      [248, 250, 255],
+      [255, 250, 234],
+      [255, 229, 194],
+      [255, 202, 157],
+    ],
+    background: ['#01020a', '#040611', '#070913'],
+    haze: ['rgba(70, 88, 150, 0.11)', 'rgba(45, 54, 105, 0.045)', 'rgba(4, 6, 17, 0)'],
+    dustAlpha: 1,
+    density: 1,
+    brightness: 1,
+    speed: 1,
+  },
+  violet: {
+    colors: [
+      [196, 181, 253],
+      [221, 214, 254],
+      [245, 243, 255],
+      [255, 240, 252],
+      [236, 201, 255],
+      [165, 180, 252],
+    ],
+    background: ['#05030e', '#100827', '#170f32'],
+    haze: ['rgba(139, 92, 246, 0.18)', 'rgba(124, 58, 237, 0.07)', 'rgba(23, 15, 50, 0)'],
+    dustAlpha: 1.15,
+    density: 1.12,
+    brightness: 1.12,
+    speed: 0.72,
+  },
+  gold: {
+    colors: [
+      [255, 244, 214],
+      [255, 232, 183],
+      [255, 218, 145],
+      [255, 255, 246],
+      [255, 198, 128],
+      [255, 174, 112],
+    ],
+    background: ['#080601', '#120c04', '#1b1207'],
+    haze: ['rgba(242, 212, 143, 0.14)', 'rgba(180, 117, 47, 0.055)', 'rgba(27, 18, 7, 0)'],
+    dustAlpha: 1.12,
+    density: 0.84,
+    brightness: 1.22,
+    speed: 0.52,
+  },
+  ice: {
+    colors: [
+      [142, 230, 255],
+      [186, 230, 253],
+      [224, 242, 254],
+      [240, 253, 255],
+      [125, 211, 252],
+      [86, 180, 255],
+    ],
+    background: ['#01060b', '#03111c', '#061a27'],
+    haze: ['rgba(56, 189, 248, 0.15)', 'rgba(14, 116, 144, 0.06)', 'rgba(6, 26, 39, 0)'],
+    dustAlpha: 1.2,
+    density: 1.28,
+    brightness: 1.08,
+    speed: 0.84,
+  },
+}
+
+const theme = computed(() => SKY_THEMES[props.variant ?? 'midnight'])
+
 const containerRef = ref<HTMLElement | null>(null)
 const canvasRef = ref<HTMLCanvasElement | null>(null)
 const animated = ref(false)
-
-const starColors: readonly StarColor[] = [
-  [182, 207, 255],
-  [215, 231, 255],
-  [248, 250, 255],
-  [255, 250, 234],
-  [255, 229, 194],
-  [255, 202, 157],
-]
 
 let context: CanvasRenderingContext2D | null = null
 let staticLayer: HTMLCanvasElement | null = null
@@ -164,9 +238,9 @@ function buildStaticLayer() {
   layerContext.scale(pixelRatio, pixelRatio)
 
   const night = layerContext.createLinearGradient(0, 0, 0, height)
-  night.addColorStop(0, '#01020a')
-  night.addColorStop(0.48, '#040611')
-  night.addColorStop(1, '#070913')
+  night.addColorStop(0, theme.value.background[0])
+  night.addColorStop(0.48, theme.value.background[1])
+  night.addColorStop(1, theme.value.background[2])
   layerContext.fillStyle = night
   layerContext.fillRect(0, 0, width, height)
 
@@ -179,21 +253,25 @@ function buildStaticLayer() {
     height * 0.12,
     hazeRadius,
   )
-  haze.addColorStop(0, 'rgba(70, 88, 150, 0.11)')
-  haze.addColorStop(0.35, 'rgba(45, 54, 105, 0.045)')
-  haze.addColorStop(1, 'rgba(4, 6, 17, 0)')
+  haze.addColorStop(0, theme.value.haze[0])
+  haze.addColorStop(0.35, theme.value.haze[1])
+  haze.addColorStop(1, theme.value.haze[2])
   layerContext.fillStyle = haze
   layerContext.fillRect(0, 0, width, height)
 
   const random = createRandom(0x51a7f13d)
-  const dustCount = Math.min(1000, Math.max(260, Math.floor((width * height) / 5200)))
+  const dustCount = Math.min(
+    1200,
+    Math.max(260, Math.floor(((width * height) / 5200) * theme.value.density)),
+  )
 
   for (let index = 0; index < dustCount; index += 1) {
     const x = random() * width
     const y = random() * height
     const radius = 0.18 + random() * 0.52
-    const alpha = 0.11 + Math.pow(random(), 2) * 0.5
-    const color = starColors[Math.floor(random() * starColors.length)] ?? starColors[2]!
+    const alpha = (0.11 + Math.pow(random(), 2) * 0.5) * theme.value.dustAlpha
+    const colors = theme.value.colors
+    const color = colors[Math.floor(random() * colors.length)] ?? colors[2]!
 
     layerContext.fillStyle = rgba(color, alpha)
     layerContext.beginPath()
@@ -206,25 +284,29 @@ function buildStaticLayer() {
 
 function buildStars() {
   const random = createRandom(0x7ac19e42)
-  const count = Math.min(340, Math.max(120, Math.floor((width * height) / 8200)))
+  const count = Math.min(
+    420,
+    Math.max(120, Math.floor(((width * height) / 8200) * theme.value.density)),
+  )
   const heroCount = Math.min(5, Math.floor(count / 70))
+  const colors = theme.value.colors
 
   stars = Array.from({ length: count }, (_, index) => {
     const hero = index < heroCount
     const brightness = hero ? 0.82 + random() * 0.18 : Math.pow(random(), 3)
     const radius = hero ? 1.6 + random() * 0.7 : 0.32 + brightness * 1.72
-    const color = starColors[Math.floor(random() * starColors.length)] ?? starColors[2]!
+    const color = colors[Math.floor(random() * colors.length)] ?? colors[2]!
     const bright = hero || (radius > 0.98 && random() > 0.32)
 
     return {
       x: random() * width,
       y: random() * height,
       sprite: createStarSprite(radius, color, bright),
-      baseAlpha: hero ? 1 : 0.44 + brightness * 0.56,
+      baseAlpha: (hero ? 1 : 0.44 + brightness * 0.56) * theme.value.brightness,
       depth: hero ? 0.18 + random() * 0.16 : 0.2 + random() * 0.42,
       phase: random() * Math.PI * 2,
-      speed: 0.16 + random() * 0.3,
-      secondarySpeed: 0.1 + random() * 0.24,
+      speed: (0.16 + random() * 0.3) * theme.value.speed,
+      secondarySpeed: (0.1 + random() * 0.24) * theme.value.speed,
     }
   })
 }
@@ -250,7 +332,7 @@ function render(time: number) {
     const alpha = star.baseAlpha * (1 - star.depth + star.depth * pulse)
     const halfSize = star.sprite.size / 2
 
-    context.globalAlpha = Math.min(1, alpha * 1.12)
+    context.globalAlpha = Math.min(1, alpha * 1.12 * theme.value.brightness)
     context.drawImage(
       star.sprite.canvas,
       star.x - halfSize,
@@ -315,6 +397,15 @@ function handleVisibilityChange() {
   else start()
 }
 
+watch(
+  () => props.variant,
+  () => {
+    if (!context) return
+    setupCanvas()
+    if (!motionQuery?.matches) start()
+  },
+)
+
 onMounted(() => {
   const canvas = canvasRef.value
   const container = containerRef.value
@@ -347,6 +438,7 @@ onBeforeUnmount(() => {
     ref="containerRef"
     class="pointer-events-none absolute inset-0 overflow-hidden"
     aria-hidden="true"
+    :data-sky="variant ?? 'midnight'"
   >
     <canvas ref="canvasRef" class="block size-full" data-starfield :data-animated="animated" />
   </div>

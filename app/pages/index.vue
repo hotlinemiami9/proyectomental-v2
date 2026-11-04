@@ -1,8 +1,25 @@
 <script setup lang="ts">
+import { landingStyles } from '~/data/landing-styles'
 import { typeLabels } from '~/data/chart-labels'
 import { typeContent } from '~/data/interpretations'
 
 const { t } = useI18n()
+
+const activeStyleId = ref('nocturno')
+const styleBarCollapsed = ref(false)
+
+const activeStyle = computed(
+  () =>
+    landingStyles.find((style) => style.id === activeStyleId.value) ??
+    (landingStyles[0] as (typeof landingStyles)[number]),
+)
+
+const styleVars = computed(() => ({
+  '--font-display': activeStyle.value.fontDisplay,
+  '--font-interface': activeStyle.value.fontInterface,
+  '--accent': activeStyle.value.accent,
+  '--accent-contrast': activeStyle.value.accentContrast,
+}))
 
 useSeoMeta({
   title: formatPageTitle('Tu carta de Diseño Humano'),
@@ -14,23 +31,34 @@ const types = Object.entries(typeContent)
 </script>
 
 <template>
-  <div class="relative isolate overflow-hidden bg-night-950">
-    <StarfieldSky />
+  <div
+    class="style-body relative isolate overflow-hidden bg-night-950"
+    :data-landing-style="activeStyle.id"
+    :style="styleVars"
+  >
+    <LandingStyleBar
+      :styles="landingStyles"
+      :active-id="activeStyleId"
+      :collapsed="styleBarCollapsed"
+      @select="activeStyleId = $event"
+      @toggle="styleBarCollapsed = !styleBarCollapsed"
+    />
+    <StarfieldSky :variant="activeStyle.sky" />
     <div
       class="pointer-events-none absolute inset-x-0 top-0 h-[42rem] bg-[radial-gradient(ellipse_at_top,rgba(139,92,246,0.1),transparent_65%)]"
     />
-    <div class="relative z-10 mx-auto w-full max-w-6xl px-5 pb-20 sm:px-8">
+    <div class="relative z-10 mx-auto w-full max-w-6xl px-5 pt-20 pb-20 sm:px-8">
       <SiteHeader />
 
       <section
         class="grid items-center gap-10 pt-8 lg:grid-cols-[minmax(0,1fr)_minmax(22rem,29rem)] lg:gap-14 lg:pt-16"
       >
         <div class="lg:self-center">
-          <p class="text-[11px] tracking-[0.32em] text-gold-300 uppercase">
+          <p class="style-accent text-[11px] tracking-[0.32em] uppercase">
             {{ t('home.eyebrow') }}
           </p>
           <h1
-            class="mt-5 max-w-[12ch] font-serif text-[clamp(3rem,8vw,6.5rem)] leading-[0.88] font-medium tracking-[-0.04em] text-balance"
+            class="style-heading mt-5 max-w-[12ch] text-[clamp(3rem,8vw,6.5rem)] leading-[0.88] font-medium tracking-[-0.04em] text-balance"
           >
             Tu carta,
             <span class="text-moon-500 italic">sin ruido.</span>
@@ -50,13 +78,13 @@ const types = Object.entries(typeContent)
           </div>
         </div>
 
-        <BirthForm />
+        <BirthForm :variant="activeStyle.form" />
       </section>
 
       <section id="explora" class="mt-28 border-t border-white/10 pt-12">
         <div class="max-w-2xl">
-          <p class="text-[11px] tracking-[0.24em] text-gold-300 uppercase">Después de la carta</p>
-          <h2 class="mt-3 font-serif text-4xl leading-tight sm:text-5xl">
+          <p class="style-accent text-[11px] tracking-[0.24em] uppercase">Después de la carta</p>
+          <h2 class="style-heading mt-3 text-4xl leading-tight sm:text-5xl">
             Una lectura para volver a ti.
           </h2>
           <p class="mt-4 text-sm leading-relaxed text-moon-300 sm:text-base">
@@ -74,7 +102,7 @@ const types = Object.entries(typeContent)
             <span class="text-[11px] tracking-[0.2em] text-moon-500 uppercase"
               >0{{ index + 1 }}</span
             >
-            <h3 class="mt-4 font-serif text-2xl">{{ typeLabels[key] ?? key }}</h3>
+            <h3 class="style-heading mt-4 text-2xl">{{ typeLabels[key] ?? key }}</h3>
             <p class="mt-3 text-sm leading-relaxed text-moon-300">{{ content.title }}</p>
           </article>
         </div>
@@ -82,22 +110,22 @@ const types = Object.entries(typeContent)
 
       <section class="mt-24 grid gap-6 border-t border-white/10 pt-12 md:grid-cols-3">
         <div>
-          <p class="text-[11px] tracking-[0.2em] text-gold-300 uppercase">01</p>
-          <h3 class="mt-3 font-serif text-2xl">Tus datos</h3>
+          <p class="style-accent text-[11px] tracking-[0.2em] uppercase">01</p>
+          <h3 class="style-heading mt-3 text-2xl">Tus datos</h3>
           <p class="mt-2 text-sm leading-relaxed text-moon-300">
             Nombre, fecha, hora y lugar de nacimiento.
           </p>
         </div>
         <div>
-          <p class="text-[11px] tracking-[0.2em] text-gold-300 uppercase">02</p>
-          <h3 class="mt-3 font-serif text-2xl">Tu carta</h3>
+          <p class="style-accent text-[11px] tracking-[0.2em] uppercase">02</p>
+          <h3 class="style-heading mt-3 text-2xl">Tu carta</h3>
           <p class="mt-2 text-sm leading-relaxed text-moon-300">
             Centros, canales, puertas y una lectura esencial.
           </p>
         </div>
         <div>
-          <p class="text-[11px] tracking-[0.2em] text-gold-300 uppercase">03</p>
-          <h3 class="mt-3 font-serif text-2xl">Tu tiempo</h3>
+          <p class="style-accent text-[11px] tracking-[0.2em] uppercase">03</p>
+          <h3 class="style-heading mt-3 text-2xl">Tu tiempo</h3>
           <p class="mt-2 text-sm leading-relaxed text-moon-300">
             Guarda, compara y vuelve cuando lo necesites.
           </p>
