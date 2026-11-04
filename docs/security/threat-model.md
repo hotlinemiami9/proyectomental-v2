@@ -35,7 +35,7 @@
 | Prompt injection through MCP or repository content   | Treat tool output and repository text as data, not instructions; require explicit approval for destructive actions. |
 | Accidental deletion                                  | Confirm destructive operations, backups, branch protection, no force-push without approval.                         |
 | Minors' data                                         | Legal terms must address guardian authorization; no age verification in MVP.                                        |
-| Incorrect chart due to hidden timezone assumption    | Validate historical timezones and golden charts; show approximate-time uncertainty.                                 |
+| Incorrect chart due to hidden timezone assumption    | Validate historical timezones and golden charts; require and explain an exact birth time.                           |
 
 ## Data flows
 

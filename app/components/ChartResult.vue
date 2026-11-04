@@ -84,18 +84,6 @@ async function downloadPdf() {
     </div>
 
     <div
-      v-if="chart.stability"
-      class="mt-6 rounded-2xl border border-gold-300/30 bg-gold-300/5 p-4 text-sm leading-relaxed text-moon-300"
-    >
-      <strong class="text-gold-300">Hora aproximada.</strong>
-      La carta se ha calculado con la hora indicada. En un margen de ±30 minutos
-      <span v-if="chart.stability.unstableFields.length">
-        pueden variar: {{ chart.stability.unstableFields.join(', ') }}.
-      </span>
-      <span v-else>los campos principales se mantienen estables.</span>
-    </div>
-
-    <div
       ref="reportRef"
       class="mt-8 space-y-8 rounded-[1.8rem] border border-white/10 bg-night-900/60 p-5 sm:p-8"
     >

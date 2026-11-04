@@ -1,6 +1,6 @@
 # Dependency security status
 
-Last reviewed: 2026-11-03.
+Last reviewed: 2026-11-04.
 
 ## Current audit
 
@@ -10,6 +10,13 @@ Last reviewed: 2026-11-03.
 - **glob (moderate, build tooling):** transitive through Nitro's file tracing. It is not exposed to runtime user input. Revisit with upstream releases.
 - **esbuild (low, Windows development server):** the affected path is the Windows development server; production runs Linux containers. Revisit when `@nuxt/fonts` updates its dependency.
 - **deepmerge (low, no patch):** transitive through Nitro's Rollup plugin. No patched version is published; track the upstream advisory.
+
+## Geographic data
+
+- `all-the-cities` 3.1.0 (MIT): 135,233 populated places with population and coordinates. It is derived from [GeoNames](https://www.geonames.org/) data, licensed under CC BY 4.0; keep that attribution if the dataset is redistributed.
+- `tz-lookup` 6.1.25 (CC0): resolves an IANA timezone from coordinates.
+- Both run only on the server and are bundled with the application. No external geocoding service is called at runtime.
+- Coverage starts at 1,000 inhabitants; smaller hamlets may still require using the nearest municipality.
 
 ## Policy
 

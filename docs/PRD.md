@@ -6,7 +6,7 @@ Help a Spanish-speaking beginner go from birth data to a clear, beautiful, and r
 
 ## Primary journey
 
-1. Enter name, birth date, approximate or exact time, and birth place.
+1. Enter name, birth date, exact time, and birth place.
 2. Confirm the interpreted local time and place.
 3. Calculate the chart.
 4. See the BodyGraph and a summary of type, strategy, authority, profile, and definition.
@@ -20,7 +20,7 @@ Help a Spanish-speaking beginner go from birth data to a clear, beautiful, and r
 - Spanish-first interface, prepared for future i18n.
 - Public home with the form at the top and an immersive visual experience below.
 - Birth dates from 1900 through today.
-- Exact or approximate birth time, with visible uncertainty and stable/unstable result indicators.
+- Exact birth time, required and briefly explained because small differences can change type, authority, or profile.
 - City search and confirmation; automatic historical timezone resolution.
 - Essential complete chart: BodyGraph, type, strategy, authority, profile, definition, centers, channels, and gates.
 - Warm editorial content: detailed core sections and short gate/channel descriptions.

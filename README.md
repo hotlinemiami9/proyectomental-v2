@@ -8,11 +8,11 @@ La aplicación permitirá introducir datos de nacimiento, calcular una carta de 
 
 El repositorio contiene un **MVP local funcional**:
 
-- Formulario de nacimiento en tres pasos.
-- Búsqueda offline de ciudades y resolución de zona horaria histórica.
+- Formulario de nacimiento de un solo paso, integrado en la portada.
+- Fecha en formato español y hora exacta en formato de 24 horas.
+- Búsqueda offline de más de 135.000 localidades y resolución de zona horaria histórica.
 - Cálculo aislado de la carta con `free-human-design`.
 - BodyGraph visual, resumen, centros, canales, puertas e interpretaciones esenciales.
-- Horas aproximadas con detección de campos inestables.
 - Biblioteca local de cartas, renombrado, duplicado y eliminación.
 - Exportación PNG y PDF desde el navegador.
 
@@ -45,6 +45,10 @@ pnpm test           # pruebas unitarias y de integración
 pnpm test:e2e       # pruebas de navegador
 pnpm check:env      # comprobar variables requeridas en producción
 ```
+
+## Datos geográficos
+
+La búsqueda de localidades usa datos derivados de [GeoNames](https://www.geonames.org/), disponibles bajo licencia CC BY 4.0.
 
 ## Documentación
 
