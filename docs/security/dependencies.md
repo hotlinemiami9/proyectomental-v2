@@ -24,6 +24,13 @@ Last reviewed: 2026-11-04.
 - Both run only on the server and are bundled with the application. No external geocoding service is called at runtime.
 - Coverage starts at 1,000 inhabitants; smaller hamlets may still require using the nearest municipality.
 
+## Development tooling
+
+- Context7 MCP is configured project-locally in `opencode.json` as a read-only documentation service at `https://mcp.context7.com/mcp`.
+- It receives library and framework documentation queries only. Do not send birth data, credentials, secrets or private user content in those queries.
+- No API key is committed. If a key is added later, use `{env:CONTEXT7_API_KEY}` and document the secret in Coolify or the local environment, never in Git.
+- Context7 is not a runtime dependency and is not part of the production image.
+
 ## Policy
 
 - Do not add `root` Coolify tokens or unnecessary `read:sensitive` permissions.
