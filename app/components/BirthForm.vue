@@ -18,6 +18,7 @@ const locationQuery = ref('')
 const locationResults = ref<LocationResult[]>([])
 const selectedLocation = ref<LocationResult | null>(null)
 const searching = ref(false)
+const searchCompleted = ref(false)
 const submitting = ref(false)
 const serverError = ref('')
 
@@ -127,6 +128,7 @@ function validateForm() {
 async function searchLocations(query: string) {
   if (query.trim().length < 2) {
     locationResults.value = []
+    searchCompleted.value = false
     return
   }
 
@@ -141,13 +143,17 @@ async function searchLocations(query: string) {
   } catch {
     if (request === searchRequest) locationResults.value = []
   } finally {
-    if (request === searchRequest) searching.value = false
+    if (request === searchRequest) {
+      searching.value = false
+      searchCompleted.value = true
+    }
   }
 }
 
 watch(locationQuery, (query) => {
   if (query.length > 0) selectedLocation.value = null
   errors.city = ''
+  searchCompleted.value = false
   clearTimeout(searchTimer)
   searchTimer = setTimeout(() => void searchLocations(query), 250)
 })
@@ -156,12 +162,14 @@ function selectLocation(location: LocationResult) {
   selectedLocation.value = location
   errors.city = ''
   locationResults.value = []
+  searchCompleted.value = false
   locationQuery.value = ''
 }
 
 function clearLocation() {
   selectedLocation.value = null
   locationQuery.value = ''
+  searchCompleted.value = false
 }
 
 async function submit() {
@@ -222,8 +230,11 @@ async function submit() {
           autocomplete="name"
           placeholder="Cómo aparecerá en la carta"
           :aria-invalid="Boolean(errors.name)"
+          :aria-describedby="errors.name ? 'name-error' : undefined"
         />
-        <p v-if="errors.name" class="mt-1 text-xs text-red-300">{{ errors.name }}</p>
+        <p id="name-error" class="mt-1 min-h-8 text-xs text-red-300" aria-live="polite">
+          {{ errors.name }}
+        </p>
       </div>
 
       <div class="grid gap-7 sm:grid-cols-2">
@@ -241,9 +252,12 @@ async function submit() {
             autocomplete="off"
             placeholder="DD/MM/AAAA"
             :aria-invalid="Boolean(errors.date)"
+            :aria-describedby="errors.date ? 'date-error' : undefined"
             @input="onDateInput"
           />
-          <p v-if="errors.date" class="mt-1 text-xs text-red-300">{{ errors.date }}</p>
+          <p id="date-error" class="mt-1 min-h-8 text-xs text-red-300" aria-live="polite">
+            {{ errors.date }}
+          </p>
         </div>
 
         <div>
@@ -262,11 +276,13 @@ async function submit() {
             maxlength="5"
             autocomplete="off"
             placeholder="HH:MM"
-            aria-describedby="exact-time-help"
+            :aria-describedby="errors.time ? 'exact-time-help time-error' : 'exact-time-help'"
             :aria-invalid="Boolean(errors.time)"
             @input="onTimeInput"
           />
-          <p v-if="errors.time" class="mt-1 text-xs text-red-300">{{ errors.time }}</p>
+          <p id="time-error" class="mt-1 min-h-8 text-xs text-red-300" aria-live="polite">
+            {{ errors.time }}
+          </p>
         </div>
       </div>
 
@@ -296,44 +312,72 @@ async function submit() {
           <label for="birth-city" class="text-[11px] tracking-[0.18em] text-moon-500 uppercase">
             Ciudad de nacimiento
           </label>
-          <input
-            id="birth-city"
-            v-model="locationQuery"
-            class="mt-2 block w-full border-b border-white/25 bg-transparent pb-2 text-lg text-moon-100 outline-none focus:border-gold-300"
-            type="search"
-            autocomplete="off"
-            placeholder="Busca un municipio"
-            aria-describedby="city-help"
-            :aria-invalid="Boolean(errors.city)"
-          />
+          <div class="relative">
+            <input
+              id="birth-city"
+              v-model="locationQuery"
+              class="mt-2 block w-full border-b border-white/25 bg-transparent pb-2 text-lg text-moon-100 outline-none focus:border-gold-300"
+              type="search"
+              autocomplete="off"
+              placeholder="Busca un municipio"
+              role="combobox"
+              aria-autocomplete="list"
+              aria-controls="city-results"
+              :aria-expanded="
+                locationQuery.length >= 2 &&
+                (searching || locationResults.length > 0 || searchCompleted)
+              "
+              :aria-describedby="errors.city ? 'city-help city-error' : 'city-help'"
+              :aria-invalid="Boolean(errors.city)"
+            />
+            <div
+              v-if="
+                locationQuery.length >= 2 &&
+                (searching || locationResults.length > 0 || searchCompleted)
+              "
+              id="city-results"
+              class="absolute inset-x-0 top-full z-30 mt-2 overflow-hidden rounded-xl border border-white/15 bg-night-950/95 shadow-2xl shadow-black/50 backdrop-blur-md"
+              role="listbox"
+              aria-label="Localidades encontradas"
+            >
+              <p v-if="searching" class="px-3 py-2.5 text-sm text-moon-300" aria-live="polite">
+                Buscando…
+              </p>
+              <ul
+                v-else-if="locationResults.length"
+                class="max-h-64 divide-y divide-white/5 overflow-y-auto"
+              >
+                <li v-for="location in locationResults" :key="location.id">
+                  <button
+                    type="button"
+                    class="w-full px-3 py-2.5 text-left text-sm transition-colors hover:bg-white/5 hover:text-gold-300"
+                    role="option"
+                    @click="selectLocation(location)"
+                  >
+                    <span class="text-moon-100">{{ location.city }}</span>
+                    <span class="text-moon-500">
+                      · {{ [location.province, location.country].filter(Boolean).join(', ') }}</span
+                    >
+                  </button>
+                </li>
+              </ul>
+              <p v-else class="px-3 py-2.5 text-sm text-moon-500">
+                No encontramos esa localidad. Prueba con el nombre oficial o el municipio cercano.
+              </p>
+            </div>
+          </div>
           <p id="city-help" class="mt-2 text-xs text-moon-500">
             Más de 135.000 localidades. Escribe el nombre oficial o el municipio más cercano.
           </p>
-          <p v-if="errors.city" class="mt-1 text-xs text-red-300">{{ errors.city }}</p>
-          <p v-if="searching" class="mt-3 text-sm text-moon-300" aria-live="polite">Buscando…</p>
-          <ul v-else-if="locationResults.length" class="mt-3 space-y-1">
-            <li v-for="location in locationResults" :key="location.id">
-              <button
-                type="button"
-                class="w-full border-b border-white/10 px-1 py-2.5 text-left text-sm transition-colors hover:border-gold-300/50 hover:text-gold-300"
-                @click="selectLocation(location)"
-              >
-                <span class="text-moon-100">{{ location.city }}</span>
-                <span class="text-moon-500">
-                  · {{ [location.province, location.country].filter(Boolean).join(', ') }}</span
-                >
-              </button>
-            </li>
-          </ul>
-          <p v-else-if="locationQuery.length >= 2" class="mt-3 text-sm text-moon-500">
-            No encontramos esa localidad. Prueba con el nombre oficial o el municipio cercano.
+          <p id="city-error" class="mt-1 min-h-8 text-xs text-red-300" aria-live="polite">
+            {{ errors.city }}
           </p>
         </div>
       </div>
 
       <p
-        v-if="serverError"
-        class="border-l-2 border-red-400 pl-3 text-sm text-red-200"
+        class="min-h-10 border-l-2 pl-3 text-sm"
+        :class="serverError ? 'border-red-400 text-red-200' : 'border-transparent'"
         role="alert"
       >
         {{ serverError }}

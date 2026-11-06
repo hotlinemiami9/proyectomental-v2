@@ -38,6 +38,30 @@ test('uses the final nocturnal landing style', async ({ page }) => {
   await expect(page.getByLabel('Nombre')).toHaveCSS('font-family', /Manrope/)
 })
 
+test('keeps the form layout stable for errors and city results', async ({ page }) => {
+  await page.goto('/')
+  await page.locator('[data-hydrated="true"]').waitFor()
+
+  const submit = page.getByRole('button', { name: 'Calcular mi carta' })
+  const documentTop = () =>
+    submit.evaluate((element) => element.getBoundingClientRect().top + window.scrollY)
+  const initial = await documentTop()
+
+  await submit.click()
+  await expect(page.getByText('Escribe el nombre que aparecerá en la carta.')).toBeVisible()
+  const withErrors = await documentTop()
+
+  await page.getByLabel('Ciudad de nacimiento').fill('Madrid')
+  await page
+    .getByRole('option', { name: /Madrid/ })
+    .first()
+    .waitFor()
+  const withResults = await documentTop()
+
+  expect(Math.abs(withErrors - initial)).toBeLessThan(1)
+  expect(Math.abs(withResults - initial)).toBeLessThan(1)
+})
+
 test('exposes a healthy service endpoint', async ({ request }) => {
   const response = await request.get('/api/health')
 
@@ -75,7 +99,7 @@ test('calculates, saves and opens a chart', async ({ page }) => {
   await expect(page.locator('#birth-time')).toHaveValue('14:30')
   await page.getByLabel('Ciudad de nacimiento').fill('Madrid')
   await page
-    .getByRole('button', { name: /Madrid/ })
+    .getByRole('option', { name: /Madrid/ })
     .first()
     .click()
 

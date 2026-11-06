@@ -40,7 +40,7 @@ const SKY_THEME: SkyTheme = {
   haze: ['rgba(242, 212, 143, 0.14)', 'rgba(180, 117, 47, 0.055)', 'rgba(27, 18, 7, 0)'],
   dustAlpha: 1.05,
   density: 1.6,
-  brightness: 0.95,
+  brightness: 1.15,
   speed: 1,
 }
 
@@ -76,7 +76,7 @@ function rgba(color: StarColor, alpha: number) {
 }
 
 function createStarSprite(radius: number, color: StarColor, bright: boolean): StarSprite {
-  const glowRadius = Math.max(bright ? 6.5 : 3.2, radius * (bright ? 6.8 : 4.4))
+  const glowRadius = Math.max(bright ? 6.5 : 2.2, radius * (bright ? 6.8 : 2.8))
   const spikeLength = bright ? glowRadius * 2.3 : 0
   const extent = Math.max(glowRadius, spikeLength)
   const size = Math.ceil(extent * 2 + 4)
@@ -169,10 +169,10 @@ function createStarSprite(radius: number, color: StarColor, bright: boolean): St
   } else {
     // Soft stars have no cross: a smooth radial falloff avoids hard, square pixels.
     const soft = spriteContext.createRadialGradient(center, center, 0, center, center, glowRadius)
-    soft.addColorStop(0, 'rgba(255, 255, 255, 0.95)')
-    soft.addColorStop(0.14, rgba(color, 0.82))
-    soft.addColorStop(0.36, rgba(color, 0.34))
-    soft.addColorStop(0.66, rgba(color, 0.07))
+    soft.addColorStop(0, 'rgba(255, 255, 255, 0.98)')
+    soft.addColorStop(0.18, rgba(color, 0.9))
+    soft.addColorStop(0.42, rgba(color, 0.3))
+    soft.addColorStop(0.7, rgba(color, 0.04))
     soft.addColorStop(1, rgba(color, 0))
     spriteContext.fillStyle = soft
     spriteContext.fillRect(center - glowRadius, center - glowRadius, glowRadius * 2, glowRadius * 2)
@@ -244,25 +244,55 @@ function buildStars() {
   )
   const heroCount = Math.min(4, Math.floor(count / 90))
   const colors = SKY_THEME.colors
+  const margin = 12
+  const minDistance = 16
+  const minDistanceSquared = minDistance * minDistance
+  const placed: Array<{ x: number; y: number }> = []
+  const usableWidth = Math.max(1, width - margin * 2)
+  const usableHeight = Math.max(1, height - margin * 2)
 
-  stars = Array.from({ length: count }, (_, index) => {
+  function placeStar(): { x: number; y: number } | null {
+    for (let attempt = 0; attempt < 60; attempt += 1) {
+      const x = margin + random() * usableWidth
+      const y = margin + random() * usableHeight
+      const separated = placed.every((other) => {
+        const dx = other.x - x
+        const dy = other.y - y
+        return dx * dx + dy * dy >= minDistanceSquared
+      })
+
+      if (separated) {
+        const position = { x, y }
+        placed.push(position)
+        return position
+      }
+    }
+
+    return null
+  }
+
+  stars = []
+
+  for (let index = 0; index < count; index += 1) {
+    const position = placeStar()
+    if (!position) continue
+
     const hero = index < heroCount
     const brightness = hero ? 0.82 + random() * 0.18 : Math.pow(random(), 3)
-    const radius = hero ? 1.6 + random() * 0.7 : 0.3 + brightness * 1.6
+    const radius = hero ? 1.5 + random() * 0.6 : 0.28 + brightness * 1.3
     const color = colors[Math.floor(random() * colors.length)] ?? colors[2]!
-    const bright = hero || (radius > 0.9 && random() > 0.28)
+    const bright = hero || (radius > 0.85 && random() > 0.3)
 
-    return {
-      x: random() * width,
-      y: random() * height,
+    stars.push({
+      ...position,
       sprite: createStarSprite(radius, color, bright),
-      baseAlpha: (hero ? 1 : 0.5 + brightness * 0.5) * SKY_THEME.brightness,
+      baseAlpha: (hero ? 1.15 : 0.58 + brightness * 0.48) * SKY_THEME.brightness,
       depth: hero ? 0.35 + random() * 0.15 : 0.8 + random() * 0.17,
       phase: random() * Math.PI * 2,
-      speed: (0.04 + random() * 0.08) * SKY_THEME.speed,
-      secondarySpeed: (0.025 + random() * 0.055) * SKY_THEME.speed,
-    }
-  })
+      speed: (0.09 + random() * 0.14) * SKY_THEME.speed,
+      secondarySpeed: (0.05 + random() * 0.08) * SKY_THEME.speed,
+    })
+  }
 }
 
 function render(time: number) {
@@ -328,7 +358,7 @@ function setupCanvas() {
   const bounds = container.getBoundingClientRect()
   width = Math.max(1, Math.round(bounds.width))
   height = Math.max(1, Math.round(bounds.height))
-  const desiredPixelRatio = Math.min(Math.max(window.devicePixelRatio || 1, 1.5), 2)
+  const desiredPixelRatio = Math.min(Math.max(window.devicePixelRatio || 1, 2), 2)
   const maxPixelRatio = 4096 / Math.max(width, height)
   pixelRatio = Math.max(1, Math.min(desiredPixelRatio, maxPixelRatio))
   canvas.width = Math.round(width * pixelRatio)
