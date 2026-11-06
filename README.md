@@ -42,6 +42,7 @@ pnpm preview        # previsualizar la compilación
 pnpm lint           # ESLint
 pnpm format         # Prettier
 pnpm typecheck      # comprobación de tipos
+pnpm check          # lint, formato, tipos, tests y build
 pnpm test           # pruebas unitarias y de integración
 pnpm test:e2e       # pruebas de navegador
 pnpm check:env      # comprobar variables requeridas en producción
