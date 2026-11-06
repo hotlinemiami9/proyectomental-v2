@@ -28,6 +28,7 @@ html {
   min-width: 320px;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
+  font-optical-sizing: auto;
 }
 
 body {

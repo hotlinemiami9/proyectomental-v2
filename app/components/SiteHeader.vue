@@ -2,6 +2,11 @@
 import { useChartsStore } from '~/stores/charts'
 
 const store = useChartsStore()
+const ready = ref(false)
+
+onMounted(() => {
+  ready.value = true
+})
 </script>
 
 <template>
@@ -20,7 +25,9 @@ const store = useChartsStore()
       <NuxtLink to="/" class="transition-colors hover:text-moon-100">Inicio</NuxtLink>
       <NuxtLink to="/cartas" class="transition-colors hover:text-moon-100">
         Mis cartas
-        <span v-if="store.count" class="ml-1 text-xs text-gold-300">({{ store.count }})</span>
+        <span v-if="ready && store.count" class="ml-1 text-xs text-gold-300">
+          ({{ store.count }})
+        </span>
       </NuxtLink>
     </nav>
   </header>

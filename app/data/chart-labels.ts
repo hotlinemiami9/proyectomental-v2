@@ -90,8 +90,13 @@ export function translateType(type: string) {
   return typeLabels[type] ?? type
 }
 
+export function normalizeAuthority(authority: string) {
+  if (authority.startsWith('Emotional')) return 'Emotional'
+  return authority
+}
+
 export function translateAuthority(authority: string) {
-  return authorityLabels[authority] ?? authority
+  return authorityLabels[normalizeAuthority(authority)] ?? authority
 }
 
 export function translateDefinition(definition: string) {

@@ -9,5 +9,6 @@ describe('home page', () => {
     expect(page.text()).toContain('Tu carta')
     expect(page.text()).toContain('Datos de nacimiento')
     expect(page.find('#birth-name').exists()).toBe(true)
+    expect(page.find('[data-starfield]').exists()).toBe(true)
   })
 })

@@ -14,25 +14,27 @@ const types = Object.entries(typeContent)
 </script>
 
 <template>
-  <div class="relative overflow-hidden">
+  <div class="relative isolate overflow-hidden bg-night-950">
+    <StarfieldSky />
     <div
-      class="pointer-events-none absolute inset-x-0 top-0 h-[42rem] bg-[radial-gradient(ellipse_at_top,rgba(139,92,246,0.18),transparent_65%)]"
+      class="pointer-events-none absolute inset-x-0 top-0 h-[42rem] bg-[radial-gradient(ellipse_at_top,rgba(242,212,143,0.1),transparent_65%)]"
     />
-    <div class="relative mx-auto w-full max-w-6xl px-5 pb-20 sm:px-8">
+    <div class="relative z-10 mx-auto w-full max-w-6xl px-5 pt-6 pb-20 sm:px-8 sm:pt-8">
       <SiteHeader />
 
       <section
         class="grid items-start gap-10 pt-8 lg:grid-cols-[minmax(0,1fr)_minmax(22rem,29rem)] lg:gap-14 lg:pt-16"
       >
-        <div class="lg:sticky lg:top-8">
+        <div class="lg:pt-24">
           <p class="text-[11px] tracking-[0.32em] text-gold-300 uppercase">
             {{ t('home.eyebrow') }}
           </p>
           <h1
-            class="mt-5 max-w-[12ch] font-serif text-[clamp(3rem,8vw,6.5rem)] leading-[0.88] font-medium tracking-[-0.04em] text-balance"
+            class="mt-5 max-w-[18ch] font-serif text-[clamp(2.6rem,5.2vw,4.6rem)] leading-[0.9] font-medium tracking-[-0.04em] text-balance"
           >
-            Tu carta,
-            <span class="text-moon-500 italic">sin ruido.</span>
+            Proyecto mental:
+            <br />
+            <span class="text-moon-500 italic">para mentes inquietas</span>
           </h1>
           <p class="mt-7 max-w-md text-base leading-relaxed text-moon-300 sm:text-lg">
             Tres datos del instante en que naciste. Una forma más clara de empezar a explorar tu
@@ -49,7 +51,14 @@ const types = Object.entries(typeContent)
           </div>
         </div>
 
-        <BirthForm />
+        <div class="relative">
+          <div
+            class="pointer-events-none absolute -inset-x-6 -inset-y-8 z-0 rounded-[3rem] bg-[radial-gradient(ellipse_at_center,rgba(7,9,19,0.82),transparent_70%)]"
+          />
+          <div class="relative z-10">
+            <BirthForm />
+          </div>
+        </div>
       </section>
 
       <section id="explora" class="mt-28 border-t border-white/10 pt-12">
@@ -68,7 +77,7 @@ const types = Object.entries(typeContent)
           <article
             v-for="([key, content], index) in types"
             :key="key"
-            class="group rounded-2xl border border-white/10 bg-white/[0.03] p-5 transition-colors hover:border-gold-300/40"
+            class="group rounded-2xl border border-white/10 bg-night-950/55 p-5 backdrop-blur-[2px] transition-colors hover:border-gold-300/40"
           >
             <span class="text-[11px] tracking-[0.2em] text-moon-500 uppercase"
               >0{{ index + 1 }}</span

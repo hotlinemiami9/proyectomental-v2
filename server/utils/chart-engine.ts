@@ -1,4 +1,3 @@
-import { DateTime } from 'luxon'
 import { CHANNELS, GATE_CENTER, computeChart } from 'free-human-design'
 import type {
   BirthInput,
@@ -137,83 +136,13 @@ function buildChart(input: BirthInput, raw: ReturnType<typeof computeChart>): Ch
   }
 }
 
-function shiftLocalTime(input: BirthInput, minutes: number) {
-  const base = DateTime.fromISO(`${input.date}T${input.time}`, { zone: input.timezone })
-  if (!base.isValid) throw new Error('La zona horaria no es válida.')
-
-  const shifted = base.plus({ minutes })
-  return {
-    date: shifted.toFormat('yyyy-MM-dd'),
-    time: shifted.toFormat('HH:mm'),
-  }
-}
-
-function calculateAt(input: BirthInput, date: string, time: string) {
-  return computeChart({
-    birthdate: date,
-    birthtime: time,
+export function calculateChart(input: BirthInput): ChartData {
+  const raw = computeChart({
+    birthdate: input.date,
+    birthtime: input.time,
     timezone: input.timezone,
     location: { lat: input.lat, lng: input.lng },
   })
-}
 
-export function calculateChart(input: BirthInput): ChartData {
-  const raw = calculateAt(input, input.date, input.time)
-  const chart = buildChart(input, raw)
-
-  if (input.timeAccuracy === 'approximate') {
-    const before = shiftLocalTime(input, -30)
-    const after = shiftLocalTime(input, 30)
-    const beforeChart = buildChart(input, calculateAt(input, before.date, before.time))
-    const afterChart = buildChart(input, calculateAt(input, after.date, after.time))
-
-    const unstableFields: string[] = []
-    if (
-      beforeChart.summary.type !== chart.summary.type ||
-      afterChart.summary.type !== chart.summary.type
-    ) {
-      unstableFields.push('Tipo')
-    }
-    if (
-      beforeChart.summary.authority !== chart.summary.authority ||
-      afterChart.summary.authority !== chart.summary.authority
-    ) {
-      unstableFields.push('Autoridad')
-    }
-    if (
-      beforeChart.summary.profile !== chart.summary.profile ||
-      afterChart.summary.profile !== chart.summary.profile
-    ) {
-      unstableFields.push('Perfil')
-    }
-    if (
-      beforeChart.summary.definition !== chart.summary.definition ||
-      afterChart.summary.definition !== chart.summary.definition
-    ) {
-      unstableFields.push('Definición')
-    }
-    if (
-      beforeChart.centers.filter((center) => center.defined).length !==
-        chart.centers.filter((center) => center.defined).length ||
-      afterChart.centers.filter((center) => center.defined).length !==
-        chart.centers.filter((center) => center.defined).length
-    ) {
-      unstableFields.push('Centros')
-    }
-    if (
-      beforeChart.channels.filter((channel) => channel.defined).length !==
-        chart.channels.filter((channel) => channel.defined).length ||
-      afterChart.channels.filter((channel) => channel.defined).length !==
-        chart.channels.filter((channel) => channel.defined).length
-    ) {
-      unstableFields.push('Canales')
-    }
-
-    chart.stability = {
-      timeWindowMinutes: 30,
-      unstableFields,
-    }
-  }
-
-  return chart
+  return buildChart(input, raw)
 }

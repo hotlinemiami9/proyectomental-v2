@@ -9,7 +9,6 @@ describe('calculateChart', () => {
       name: 'Prueba',
       date: '1972-08-02',
       time: '14:30',
-      timeAccuracy: 'exact',
       city: 'Bangkok',
       country: 'Thailand',
       lat: 13.75,
@@ -23,22 +22,5 @@ describe('calculateChart', () => {
     expect(chart.channels).toHaveLength(36)
     expect(chart.gates.length).toBeGreaterThan(0)
     expect(['none', 'single', 'split', 'triple', 'quadruple']).toContain(chart.summary.definition)
-  })
-
-  it('marks fields that vary with an approximate time', () => {
-    const chart = calculateChart({
-      name: 'Prueba aproximada',
-      date: '1990-05-15',
-      time: '14:30',
-      timeAccuracy: 'approximate',
-      city: 'Madrid',
-      country: 'Spain',
-      lat: 40.4,
-      lng: -3.68,
-      timezone: 'Europe/Madrid',
-    })
-
-    expect(chart.stability?.timeWindowMinutes).toBe(30)
-    expect(Array.isArray(chart.stability?.unstableFields)).toBe(true)
   })
 })

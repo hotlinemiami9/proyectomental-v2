@@ -159,8 +159,10 @@ export function getTypeContent(type: string) {
 }
 
 export function getAuthorityContent(authority: string) {
+  const key = authority.startsWith('Emotional') ? 'Emotional' : authority
+
   return (
-    authorityContent[authority] ?? {
+    authorityContent[key] ?? {
       title: 'Tu autoridad interna',
       body: 'La autoridad es tu forma más fiable de decidir. Observa cómo se manifiesta en tu cuerpo y en tu proceso antes de convertirla en una regla mental.',
     }

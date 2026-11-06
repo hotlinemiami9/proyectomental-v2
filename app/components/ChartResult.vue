@@ -11,7 +11,6 @@ import { exportElementAsPdf, exportElementAsPng } from '~/utils/export-chart'
 
 const props = defineProps<{ chart: ChartData }>()
 
-const reportRef = ref<HTMLElement | null>(null)
 const graphRef = ref<HTMLElement | null>(null)
 const exporting = ref<'png' | 'pdf' | null>(null)
 
@@ -40,10 +39,10 @@ async function downloadPng() {
 }
 
 async function downloadPdf() {
-  if (!reportRef.value) return
+  if (!graphRef.value) return
   exporting.value = 'pdf'
   try {
-    await exportElementAsPdf(reportRef.value, props.chart.input.name)
+    await exportElementAsPdf(graphRef.value, props.chart, props.chart.input.name)
   } finally {
     exporting.value = null
   }
@@ -83,22 +82,7 @@ async function downloadPdf() {
       </div>
     </div>
 
-    <div
-      v-if="chart.stability"
-      class="mt-6 rounded-2xl border border-gold-300/30 bg-gold-300/5 p-4 text-sm leading-relaxed text-moon-300"
-    >
-      <strong class="text-gold-300">Hora aproximada.</strong>
-      La carta se ha calculado con la hora indicada. En un margen de ±30 minutos
-      <span v-if="chart.stability.unstableFields.length">
-        pueden variar: {{ chart.stability.unstableFields.join(', ') }}.
-      </span>
-      <span v-else>los campos principales se mantienen estables.</span>
-    </div>
-
-    <div
-      ref="reportRef"
-      class="mt-8 space-y-8 rounded-[1.8rem] border border-white/10 bg-night-900/60 p-5 sm:p-8"
-    >
+    <div class="mt-8 space-y-8 rounded-[1.8rem] border border-white/10 bg-night-900/60 p-5 sm:p-8">
       <section class="grid items-center gap-8 lg:grid-cols-[minmax(0,1fr)_22rem]">
         <div ref="graphRef" class="rounded-3xl bg-night-950 p-2">
           <BodyGraph :chart="chart" />

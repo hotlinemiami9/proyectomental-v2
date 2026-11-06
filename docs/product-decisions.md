@@ -29,10 +29,10 @@ Decisions captured during the initial discovery interview. Change them through a
 ## Birth data and results
 
 - Dates from 1900 through today.
-- Exact or approximate birth time; approximate results show uncertainty and stable/unstable fields.
+- Exact birth time only; the form briefly explains that small differences can change type, authority, or profile.
 - City search with autocomplete and confirmation; country and region included.
 - Historical timezone resolved automatically without an extra confirmation screen.
-- Three-step form with a final review.
+- Single-step form integrated into the landing page, with Spanish date and 24-hour time formats.
 - Name is required; aliases are not used.
 - Results start with the chart and summary, then interpretations.
 - BodyGraph keeps the recognizable geometry with a new visual identity and a textual equivalent.
@@ -59,7 +59,7 @@ Decisions captured during the initial discovery interview. Change them through a
 ## Brand and design
 
 - Public brand: ProyectoMental; “Diseño Humano” is the service descriptor.
-- One signature nocturnal theme, not multiple visual themes.
+- One signature nocturnal theme with a golden nebula; Fraunces for display and Manrope for interface text. No alternate landing themes.
 - Subtle cinematic motion, with reduced-motion support.
 - Editorial serif for headings and a highly legible sans for body text.
 - Original celestial symbol and wordmark.

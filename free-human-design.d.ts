@@ -57,19 +57,25 @@ declare module 'free-human-design' {
   export function computeChart(input: FreeHumanDesignInput): FreeHumanDesignChart
 }
 
-declare module 'city-timezones' {
-  export interface CityTimezone {
-    city: string
-    city_ascii: string
-    lat: number
-    lng: number
-    pop: number
+declare module 'all-the-cities' {
+  export interface AllTheCitiesCity {
+    cityId: number
+    name: string
     country: string
-    iso2: string
-    iso3: string
-    province: string
-    timezone: string
+    altName: string
+    adminCode: string
+    population: number
+    loc: {
+      type: 'Point'
+      coordinates: [number, number]
+    }
   }
 
-  export const cityMapping: CityTimezone[]
+  const cities: AllTheCitiesCity[]
+  export = cities
+}
+
+declare module 'tz-lookup' {
+  function tzLookup(lat: number, lng: number): string
+  export = tzLookup
 }

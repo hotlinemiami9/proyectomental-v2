@@ -1,13 +1,10 @@
 export type CenterId =
   'head' | 'ajna' | 'throat' | 'g' | 'heart' | 'sacral' | 'solarplexus' | 'spleen' | 'root'
 
-export type TimeAccuracy = 'exact' | 'approximate'
-
 export interface BirthInput {
   name: string
   date: string
   time: string
-  timeAccuracy: TimeAccuracy
   city: string
   country: string
   lat: number
@@ -56,11 +53,6 @@ export interface ChartActivation {
   retrograde: boolean
 }
 
-export interface ChartStability {
-  timeWindowMinutes: number
-  unstableFields: string[]
-}
-
 export interface ChartData {
   input: BirthInput & {
     birthUtc: string
@@ -73,7 +65,6 @@ export interface ChartData {
     personality: ChartActivation[]
     design: ChartActivation[]
   }
-  stability?: ChartStability
 }
 
 export interface SavedChart {

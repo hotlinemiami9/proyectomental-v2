@@ -12,10 +12,15 @@ onMounted(() => {
 
 const saved = computed(() => (ready.value ? store.find(String(route.params.id)) : null))
 
+useHead({
+  title: computed(() =>
+    formatPageTitle(
+      saved.value ? `Carta de ${saved.value.chart.input.name}` : 'Carta no encontrada',
+    ),
+  ),
+})
+
 useSeoMeta({
-  title: saved.value
-    ? formatPageTitle(`Carta de ${saved.value.chart.input.name}`)
-    : formatPageTitle('Carta no encontrada'),
   description: 'Carta de Diseño Humano calculada en ProyectoMental.',
 })
 </script>

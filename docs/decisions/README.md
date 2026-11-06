@@ -5,3 +5,4 @@
 - [0003 — Supabase for accounts and data](0003-supabase.md)
 - [0004 — Coolify staging and production](0004-coolify-environments.md)
 - [0005 — Nuxt UI and visual system](0005-nuxt-ui-and-design-system.md)
+- [0006 — Typography and final landing atmosphere](0006-typography-and-landing-atmosphere.md)
