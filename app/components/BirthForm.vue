@@ -217,7 +217,7 @@ async function submit() {
     </div>
 
     <form class="mt-8 max-w-xl space-y-7" novalidate @submit.prevent="submit">
-      <div>
+      <div class="relative">
         <label for="birth-name" class="text-[11px] tracking-[0.18em] text-moon-500 uppercase">
           Nombre
         </label>
@@ -232,13 +232,17 @@ async function submit() {
           :aria-invalid="Boolean(errors.name)"
           :aria-describedby="errors.name ? 'name-error' : undefined"
         />
-        <p id="name-error" class="mt-1 min-h-8 text-xs text-red-300" aria-live="polite">
+        <p
+          id="name-error"
+          class="pointer-events-none absolute inset-x-0 top-full mt-1 text-xs leading-4 text-red-300"
+          aria-live="polite"
+        >
           {{ errors.name }}
         </p>
       </div>
 
       <div class="grid gap-7 sm:grid-cols-2">
-        <div>
+        <div class="relative">
           <label for="birth-date" class="text-[11px] tracking-[0.18em] text-moon-500 uppercase">
             Fecha de nacimiento
           </label>
@@ -255,12 +259,16 @@ async function submit() {
             :aria-describedby="errors.date ? 'date-error' : undefined"
             @input="onDateInput"
           />
-          <p id="date-error" class="mt-1 min-h-8 text-xs text-red-300" aria-live="polite">
+          <p
+            id="date-error"
+            class="pointer-events-none absolute inset-x-0 top-full mt-1 text-xs leading-4 text-red-300"
+            aria-live="polite"
+          >
             {{ errors.date }}
           </p>
         </div>
 
-        <div>
+        <div class="relative">
           <label
             for="birth-time"
             class="text-[10px] tracking-[0.14em] whitespace-nowrap text-moon-500 uppercase"
@@ -280,7 +288,11 @@ async function submit() {
             :aria-invalid="Boolean(errors.time)"
             @input="onTimeInput"
           />
-          <p id="time-error" class="mt-1 min-h-8 text-xs text-red-300" aria-live="polite">
+          <p
+            id="time-error"
+            class="pointer-events-none absolute inset-x-0 top-full mt-1 text-xs leading-4 text-red-300"
+            aria-live="polite"
+          >
             {{ errors.time }}
           </p>
         </div>
@@ -308,7 +320,7 @@ async function submit() {
           </button>
         </div>
 
-        <div v-else>
+        <div v-else class="relative">
           <label for="birth-city" class="text-[11px] tracking-[0.18em] text-moon-500 uppercase">
             Ciudad de nacimiento
           </label>
@@ -369,27 +381,32 @@ async function submit() {
           <p id="city-help" class="mt-2 text-xs text-moon-500">
             Más de 135.000 localidades. Escribe el nombre oficial o el municipio más cercano.
           </p>
-          <p id="city-error" class="mt-1 min-h-8 text-xs text-red-300" aria-live="polite">
+          <p
+            id="city-error"
+            class="pointer-events-none absolute inset-x-0 top-full mt-1 text-xs leading-4 text-red-300"
+            aria-live="polite"
+          >
             {{ errors.city }}
           </p>
         </div>
       </div>
 
-      <p
-        class="min-h-10 border-l-2 pl-3 text-sm"
-        :class="serverError ? 'border-red-400 text-red-200' : 'border-transparent'"
-        role="alert"
-      >
-        {{ serverError }}
-      </p>
-
-      <button
-        type="submit"
-        class="w-full rounded-full bg-gold-300 px-5 py-3 text-sm font-medium text-night-950 transition-colors hover:bg-gold-300/90 disabled:opacity-60 sm:w-auto"
-        :disabled="submitting"
-      >
-        {{ submitting ? 'Calculando…' : 'Calcular mi carta' }}
-      </button>
+      <div class="relative">
+        <p
+          v-if="serverError"
+          class="absolute bottom-full left-0 mb-3 rounded-lg border-l-2 border-red-400 bg-night-950/90 px-3 py-2 text-sm text-red-200 shadow-lg shadow-black/30"
+          role="alert"
+        >
+          {{ serverError }}
+        </p>
+        <button
+          type="submit"
+          class="w-full rounded-full bg-gold-300 px-5 py-3 text-sm font-medium text-night-950 transition-colors hover:bg-gold-300/90 disabled:opacity-60 sm:w-auto"
+          :disabled="submitting"
+        >
+          {{ submitting ? 'Calculando…' : 'Calcular mi carta' }}
+        </button>
+      </div>
     </form>
   </section>
 </template>
