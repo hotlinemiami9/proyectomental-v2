@@ -38,10 +38,10 @@ const SKY_THEME: SkyTheme = {
   ],
   background: ['#080601', '#120c04', '#1b1207'],
   haze: ['rgba(242, 212, 143, 0.14)', 'rgba(180, 117, 47, 0.055)', 'rgba(27, 18, 7, 0)'],
-  dustAlpha: 1.12,
-  density: 0.84,
-  brightness: 1.22,
-  speed: 0.52,
+  dustAlpha: 1.05,
+  density: 1.6,
+  brightness: 0.95,
+  speed: 1,
 }
 
 const containerRef = ref<HTMLElement | null>(null)
@@ -76,7 +76,7 @@ function rgba(color: StarColor, alpha: number) {
 }
 
 function createStarSprite(radius: number, color: StarColor, bright: boolean): StarSprite {
-  const glowRadius = Math.max(bright ? 6.5 : 2.5, radius * (bright ? 6.8 : 3.3))
+  const glowRadius = Math.max(bright ? 6.5 : 3.2, radius * (bright ? 6.8 : 4.4))
   const spikeLength = bright ? glowRadius * 2.3 : 0
   const extent = Math.max(glowRadius, spikeLength)
   const size = Math.ceil(extent * 2 + 4)
@@ -91,17 +91,17 @@ function createStarSprite(radius: number, color: StarColor, bright: boolean): St
   spriteContext.scale(scale, scale)
   const center = size / 2
 
-  // A very faint halo keeps the star luminous without turning it into a bright disc.
-  const halo = spriteContext.createRadialGradient(center, center, 0, center, center, glowRadius)
-  halo.addColorStop(0, rgba(color, bright ? 0.26 : 0.14))
-  halo.addColorStop(0.16, rgba(color, bright ? 0.12 : 0.055))
-  halo.addColorStop(0.44, rgba(color, bright ? 0.03 : 0.012))
-  halo.addColorStop(0.76, rgba(color, 0.004))
-  halo.addColorStop(1, rgba(color, 0))
-  spriteContext.fillStyle = halo
-  spriteContext.fillRect(center - glowRadius, center - glowRadius, glowRadius * 2, glowRadius * 2)
-
   if (bright) {
+    // A very faint halo keeps the star luminous without turning it into a bright disc.
+    const halo = spriteContext.createRadialGradient(center, center, 0, center, center, glowRadius)
+    halo.addColorStop(0, rgba(color, 0.26))
+    halo.addColorStop(0.16, rgba(color, 0.12))
+    halo.addColorStop(0.44, rgba(color, 0.03))
+    halo.addColorStop(0.76, rgba(color, 0.004))
+    halo.addColorStop(1, rgba(color, 0))
+    spriteContext.fillStyle = halo
+    spriteContext.fillRect(center - glowRadius, center - glowRadius, glowRadius * 2, glowRadius * 2)
+
     const spikeWidth = 0.9
     const horizontal = spriteContext.createLinearGradient(
       center - spikeLength,
@@ -156,17 +156,27 @@ function createStarSprite(radius: number, color: StarColor, bright: boolean): St
     spriteContext.fillStyle = diagonal
     spriteContext.fillRect(-diagonalLength, -0.28, diagonalLength * 2, 0.56)
     spriteContext.restore()
-  }
 
-  // The core is deliberately small: a point of light, not a glowing ball.
-  const coreRadius = Math.max(0.6, radius * 0.84)
-  const core = spriteContext.createRadialGradient(center, center, 0, center, center, coreRadius)
-  core.addColorStop(0, 'rgba(255, 255, 255, 1)')
-  core.addColorStop(0.34, 'rgba(255, 255, 255, 0.98)')
-  core.addColorStop(0.7, rgba(color, 0.78))
-  core.addColorStop(1, rgba(color, 0))
-  spriteContext.fillStyle = core
-  spriteContext.fillRect(center - coreRadius, center - coreRadius, coreRadius * 2, coreRadius * 2)
+    // Bright stars keep a small point of light at the centre of the spikes.
+    const coreRadius = Math.max(0.6, radius * 0.84)
+    const core = spriteContext.createRadialGradient(center, center, 0, center, center, coreRadius)
+    core.addColorStop(0, 'rgba(255, 255, 255, 1)')
+    core.addColorStop(0.34, 'rgba(255, 255, 255, 0.98)')
+    core.addColorStop(0.7, rgba(color, 0.78))
+    core.addColorStop(1, rgba(color, 0))
+    spriteContext.fillStyle = core
+    spriteContext.fillRect(center - coreRadius, center - coreRadius, coreRadius * 2, coreRadius * 2)
+  } else {
+    // Soft stars have no cross: a smooth radial falloff avoids hard, square pixels.
+    const soft = spriteContext.createRadialGradient(center, center, 0, center, center, glowRadius)
+    soft.addColorStop(0, 'rgba(255, 255, 255, 0.95)')
+    soft.addColorStop(0.14, rgba(color, 0.82))
+    soft.addColorStop(0.36, rgba(color, 0.34))
+    soft.addColorStop(0.66, rgba(color, 0.07))
+    soft.addColorStop(1, rgba(color, 0))
+    spriteContext.fillStyle = soft
+    spriteContext.fillRect(center - glowRadius, center - glowRadius, glowRadius * 2, glowRadius * 2)
+  }
 
   return { canvas, size }
 }
@@ -205,15 +215,15 @@ function buildStaticLayer() {
 
   const random = createRandom(0x51a7f13d)
   const dustCount = Math.min(
-    1200,
-    Math.max(260, Math.floor(((width * height) / 5200) * SKY_THEME.density)),
+    1600,
+    Math.max(420, Math.floor(((width * height) / 4200) * SKY_THEME.density)),
   )
 
   for (let index = 0; index < dustCount; index += 1) {
     const x = random() * width
     const y = random() * height
-    const radius = 0.18 + random() * 0.52
-    const alpha = (0.11 + Math.pow(random(), 2) * 0.5) * SKY_THEME.dustAlpha
+    const radius = 0.32 + random() * 0.58
+    const alpha = (0.08 + Math.pow(random(), 2) * 0.42) * SKY_THEME.dustAlpha
     const colors = SKY_THEME.colors
     const color = colors[Math.floor(random() * colors.length)] ?? colors[2]!
 
@@ -229,28 +239,28 @@ function buildStaticLayer() {
 function buildStars() {
   const random = createRandom(0x7ac19e42)
   const count = Math.min(
-    420,
-    Math.max(120, Math.floor(((width * height) / 8200) * SKY_THEME.density)),
+    760,
+    Math.max(180, Math.floor(((width * height) / 6200) * SKY_THEME.density)),
   )
-  const heroCount = Math.min(5, Math.floor(count / 70))
+  const heroCount = Math.min(4, Math.floor(count / 90))
   const colors = SKY_THEME.colors
 
   stars = Array.from({ length: count }, (_, index) => {
     const hero = index < heroCount
     const brightness = hero ? 0.82 + random() * 0.18 : Math.pow(random(), 3)
-    const radius = hero ? 1.6 + random() * 0.7 : 0.32 + brightness * 1.72
+    const radius = hero ? 1.6 + random() * 0.7 : 0.3 + brightness * 1.6
     const color = colors[Math.floor(random() * colors.length)] ?? colors[2]!
-    const bright = hero || (radius > 0.98 && random() > 0.32)
+    const bright = hero || (radius > 0.9 && random() > 0.28)
 
     return {
       x: random() * width,
       y: random() * height,
       sprite: createStarSprite(radius, color, bright),
-      baseAlpha: (hero ? 1 : 0.44 + brightness * 0.56) * SKY_THEME.brightness,
-      depth: hero ? 0.18 + random() * 0.16 : 0.2 + random() * 0.42,
+      baseAlpha: (hero ? 1 : 0.5 + brightness * 0.5) * SKY_THEME.brightness,
+      depth: hero ? 0.35 + random() * 0.15 : 0.8 + random() * 0.17,
       phase: random() * Math.PI * 2,
-      speed: (0.16 + random() * 0.3) * SKY_THEME.speed,
-      secondarySpeed: (0.1 + random() * 0.24) * SKY_THEME.speed,
+      speed: (0.04 + random() * 0.08) * SKY_THEME.speed,
+      secondarySpeed: (0.025 + random() * 0.055) * SKY_THEME.speed,
     }
   })
 }
@@ -268,6 +278,8 @@ function render(time: number) {
   context.save()
   context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0)
   context.globalCompositeOperation = 'screen'
+  context.imageSmoothingEnabled = true
+  context.imageSmoothingQuality = 'high'
 
   for (const star of stars) {
     const primary = 0.5 + 0.5 * Math.sin(time * star.speed + star.phase)
@@ -276,7 +288,7 @@ function render(time: number) {
     const alpha = star.baseAlpha * (1 - star.depth + star.depth * pulse)
     const halfSize = star.sprite.size / 2
 
-    context.globalAlpha = Math.min(1, alpha * 1.12 * SKY_THEME.brightness)
+    context.globalAlpha = Math.min(1, alpha * SKY_THEME.brightness)
     context.drawImage(
       star.sprite.canvas,
       star.x - halfSize,
@@ -316,12 +328,15 @@ function setupCanvas() {
   const bounds = container.getBoundingClientRect()
   width = Math.max(1, Math.round(bounds.width))
   height = Math.max(1, Math.round(bounds.height))
-  pixelRatio = Math.min(window.devicePixelRatio || 1, 1.75)
+  const desiredPixelRatio = Math.min(Math.max(window.devicePixelRatio || 1, 1.5), 2)
+  const maxPixelRatio = 4096 / Math.max(width, height)
+  pixelRatio = Math.max(1, Math.min(desiredPixelRatio, maxPixelRatio))
   canvas.width = Math.round(width * pixelRatio)
   canvas.height = Math.round(height * pixelRatio)
 
   staticLayer = buildStaticLayer()
   buildStars()
+  canvas.dataset.starCount = String(stars.length)
   render(0)
 }
 

@@ -4,7 +4,7 @@ test('renders the application shell', async ({ page }) => {
   await page.goto('/')
   await page.locator('[data-hydrated="true"]').waitFor()
 
-  await expect(page.getByRole('heading', { level: 1 })).toContainText('Tu carta')
+  await expect(page.getByRole('heading', { level: 1 })).toContainText('Proyecto mental')
   await expect(page.getByLabel('Nombre')).toBeVisible()
   await expect(page.getByText('La hora debe ser exacta')).toBeVisible()
   await expect(page.getByLabel('Fecha de nacimiento')).toHaveAttribute('placeholder', 'DD/MM/AAAA')
@@ -28,7 +28,12 @@ test('uses the final nocturnal landing style', async ({ page }) => {
   await page.locator('[data-hydrated="true"]').waitFor()
 
   await expect(page.locator('[data-sky="gold"]')).toBeVisible()
+  await expect(page.locator('[data-starfield]')).toHaveAttribute(
+    'data-star-count',
+    /^([2-9]\d{2}|\d{4,})$/,
+  )
   await expect(page.locator('[data-landing-style-bar]')).toHaveCount(0)
+  await expect(page.getByRole('heading', { level: 1 })).toContainText('para mentes inquietas')
   await expect(page.getByRole('heading', { level: 1 })).toHaveCSS('font-family', /Fraunces/)
   await expect(page.getByLabel('Nombre')).toHaveCSS('font-family', /Manrope/)
 })
