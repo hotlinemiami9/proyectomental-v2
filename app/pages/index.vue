@@ -23,9 +23,9 @@ const types = Object.entries(typeContent)
       <SiteHeader />
 
       <section
-        class="grid items-center gap-10 pt-8 lg:grid-cols-[minmax(0,1fr)_minmax(22rem,29rem)] lg:gap-14 lg:pt-16"
+        class="grid items-start gap-10 pt-8 lg:grid-cols-[minmax(0,1fr)_minmax(22rem,29rem)] lg:gap-14 lg:pt-16"
       >
-        <div class="lg:self-center">
+        <div class="lg:pt-24">
           <p class="text-[11px] tracking-[0.32em] text-gold-300 uppercase">
             {{ t('home.eyebrow') }}
           </p>
