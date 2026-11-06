@@ -28,6 +28,7 @@ html {
   min-width: 320px;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
+  font-optical-sizing: auto;
 }
 
 body {
@@ -42,48 +43,6 @@ body {
 ::selection {
   color: var(--color-night-950);
   background: var(--color-gold-300);
-}
-
-.style-heading {
-  font-family: var(--font-display, var(--font-serif));
-}
-
-.style-body {
-  font-family: var(--font-interface, var(--font-sans));
-}
-
-.style-accent {
-  color: var(--accent, var(--color-gold-300));
-}
-
-.style-accent-border {
-  border-color: color-mix(in srgb, var(--accent, var(--color-gold-300)), transparent 55%);
-}
-
-.style-input {
-  border-bottom-color: color-mix(in srgb, var(--accent, var(--color-gold-300)), transparent 70%);
-}
-
-.style-input:focus {
-  border-bottom-color: var(--accent, var(--color-gold-300));
-}
-
-.style-result {
-  border-color: color-mix(in srgb, var(--accent, var(--color-gold-300)), transparent 75%);
-}
-
-.style-result:hover {
-  color: var(--accent, var(--color-gold-300));
-  border-color: var(--accent, var(--color-gold-300));
-}
-
-.style-button {
-  background: var(--accent, var(--color-gold-300));
-  color: var(--accent-contrast, var(--color-night-950));
-}
-
-.style-button:hover {
-  filter: brightness(1.08);
 }
 
 @media (prefers-reduced-motion: reduce) {

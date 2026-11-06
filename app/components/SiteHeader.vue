@@ -18,7 +18,7 @@ onMounted(() => {
           d="M7 0.4 8.15 5.15 13.2 7 8.15 8.85 7 13.6 5.85 8.85 0.8 7 5.85 5.15Z"
         />
       </svg>
-      <span class="style-heading text-xl">ProyectoMental</span>
+      <span class="font-serif text-xl">ProyectoMental</span>
     </NuxtLink>
 
     <nav class="flex items-center gap-5 text-sm text-moon-300" aria-label="Navegación principal">

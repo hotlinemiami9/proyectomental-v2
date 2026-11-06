@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { useChartsStore } from '~/stores/charts'
-import type { LandingFormVariant } from '~/data/landing-styles'
 import type { ChartData } from '~/types/chart'
 
 interface LocationResult {
@@ -13,7 +12,6 @@ interface LocationResult {
   timezone: string
 }
 
-const props = defineProps<{ variant?: LandingFormVariant }>()
 const store = useChartsStore()
 const hydrated = ref(false)
 const locationQuery = ref('')
@@ -38,20 +36,6 @@ onMounted(() => {
 })
 
 const todayIso = new Date().toISOString().slice(0, 10)
-
-const sectionClass = computed(() => {
-  switch (props.variant ?? 'embedded') {
-    case 'glass':
-      return 'rounded-[2rem] border border-white/15 bg-white/[0.06] p-6 backdrop-blur-xl'
-    case 'editorial':
-      return 'border-t border-white/15 pt-6'
-    case 'minimal':
-      return 'max-w-xl'
-    case 'embedded':
-    default:
-      return 'lg:border-l lg:border-white/10 lg:pl-10'
-  }
-})
 
 const selectedLabel = computed(() => {
   if (!selectedLocation.value) return ''
@@ -215,14 +199,10 @@ async function submit() {
 </script>
 
 <template>
-  <section
-    :class="sectionClass"
-    :data-hydrated="hydrated"
-    :data-form-variant="variant ?? 'embedded'"
-  >
+  <section class="lg:border-l lg:border-white/10 lg:pl-10" :data-hydrated="hydrated">
     <div class="max-w-xl">
-      <p class="style-accent text-[11px] tracking-[0.24em] uppercase">Tu carta</p>
-      <h2 class="style-heading mt-2 text-4xl">Datos de nacimiento</h2>
+      <p class="text-[11px] tracking-[0.24em] text-gold-300 uppercase">Tu carta</p>
+      <h2 class="mt-2 font-serif text-4xl">Datos de nacimiento</h2>
       <p class="mt-3 text-sm leading-relaxed text-moon-300">
         Todo en un solo paso. Sin registro y sin guardar nada en la nube.
       </p>
@@ -236,7 +216,7 @@ async function submit() {
         <input
           id="birth-name"
           v-model="form.name"
-          class="style-input mt-2 w-full border-b bg-transparent pb-2 text-lg text-moon-100 outline-none"
+          class="mt-2 block w-full border-b border-white/25 bg-transparent pb-2 text-lg text-moon-100 outline-none focus:border-gold-300"
           type="text"
           maxlength="80"
           autocomplete="name"
@@ -254,7 +234,7 @@ async function submit() {
           <input
             id="birth-date"
             :value="form.birthDate"
-            class="style-input mt-2 w-full border-b bg-transparent pb-2 text-lg text-moon-100 outline-none"
+            class="mt-2 block w-full border-b border-white/25 bg-transparent pb-2 text-lg text-moon-100 tabular-nums outline-none focus:border-gold-300"
             type="text"
             inputmode="numeric"
             maxlength="10"
@@ -276,7 +256,7 @@ async function submit() {
           <input
             id="birth-time"
             :value="form.birthTime"
-            class="style-input mt-2 w-full border-b bg-transparent pb-2 text-lg text-moon-100 outline-none"
+            class="mt-2 block w-full border-b border-white/25 bg-transparent pb-2 text-lg text-moon-100 tabular-nums outline-none focus:border-gold-300"
             type="text"
             inputmode="numeric"
             maxlength="5"
@@ -292,20 +272,20 @@ async function submit() {
 
       <p
         id="exact-time-help"
-        class="style-accent-border border-l pl-3 text-xs leading-relaxed text-moon-500"
+        class="border-l border-gold-300/40 pl-3 text-xs leading-relaxed text-moon-500"
       >
         La hora debe ser exacta: unos minutos pueden cambiar el tipo, la autoridad o el perfil de la
         carta.
       </p>
 
       <div>
-        <div v-if="selectedLocation" class="style-accent-border border-l pl-4">
-          <p class="style-accent text-[11px] tracking-[0.18em] uppercase">Lugar seleccionado</p>
+        <div v-if="selectedLocation" class="border-l border-gold-300/40 pl-4">
+          <p class="text-[11px] tracking-[0.18em] text-gold-300 uppercase">Lugar seleccionado</p>
           <p class="mt-2 text-lg">{{ selectedLabel }}</p>
           <p class="mt-1 text-xs text-moon-500">Zona horaria detectada automáticamente.</p>
           <button
             type="button"
-            class="style-accent mt-3 text-sm underline-offset-4 hover:underline"
+            class="mt-3 text-sm text-gold-300 underline-offset-4 hover:underline"
             @click="clearLocation"
           >
             Cambiar lugar
@@ -319,7 +299,7 @@ async function submit() {
           <input
             id="birth-city"
             v-model="locationQuery"
-            class="style-input mt-2 w-full border-b bg-transparent pb-2 text-lg text-moon-100 outline-none"
+            class="mt-2 block w-full border-b border-white/25 bg-transparent pb-2 text-lg text-moon-100 outline-none focus:border-gold-300"
             type="search"
             autocomplete="off"
             placeholder="Busca un municipio"
@@ -335,7 +315,7 @@ async function submit() {
             <li v-for="location in locationResults" :key="location.id">
               <button
                 type="button"
-                class="style-result w-full border-b px-1 py-2.5 text-left text-sm transition-colors"
+                class="w-full border-b border-white/10 px-1 py-2.5 text-left text-sm transition-colors hover:border-gold-300/50 hover:text-gold-300"
                 @click="selectLocation(location)"
               >
                 <span class="text-moon-100">{{ location.city }}</span>
@@ -361,7 +341,7 @@ async function submit() {
 
       <button
         type="submit"
-        class="style-button w-full rounded-full px-5 py-3 text-sm font-medium transition-colors disabled:opacity-60 sm:w-auto"
+        class="w-full rounded-full bg-gold-300 px-5 py-3 text-sm font-medium text-night-950 transition-colors hover:bg-gold-300/90 disabled:opacity-60 sm:w-auto"
         :disabled="submitting"
       >
         {{ submitting ? 'Calculando…' : 'Calcular mi carta' }}

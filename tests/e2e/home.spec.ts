@@ -23,17 +23,14 @@ test('keeps the sky static when reduced motion is requested', async ({ page }) =
   await expect(page.locator('[data-starfield]')).toHaveAttribute('data-animated', 'false')
 })
 
-test('switches landing styles and collapses the preview bar', async ({ page }) => {
+test('uses the final nocturnal landing style', async ({ page }) => {
   await page.goto('/')
   await page.locator('[data-hydrated="true"]').waitFor()
 
-  await page.getByRole('button', { name: 'Aurora' }).click()
-  await expect(page.locator('[data-landing-style="aurora"]')).toBeVisible()
-  await expect(page.locator('[data-form-variant="glass"]')).toBeVisible()
-  await expect(page.locator('[data-sky="violet"]')).toBeVisible()
-
-  await page.getByRole('button', { name: 'Casi ocultar' }).click()
-  await expect(page.getByRole('button', { name: 'Mostrar selector de estilos' })).toBeVisible()
+  await expect(page.locator('[data-sky="gold"]')).toBeVisible()
+  await expect(page.locator('[data-landing-style-bar]')).toHaveCount(0)
+  await expect(page.getByRole('heading', { level: 1 })).toHaveCSS('font-family', /Fraunces/)
+  await expect(page.getByLabel('Nombre')).toHaveCSS('font-family', /Manrope/)
 })
 
 test('exposes a healthy service endpoint', async ({ request }) => {
